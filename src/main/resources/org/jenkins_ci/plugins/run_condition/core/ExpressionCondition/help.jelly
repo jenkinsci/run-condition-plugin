@@ -1,0 +1,50 @@
+<?jelly escape-by-default='true'?>
+<!--
+  ~ The MIT License
+  ~
+  ~ Copyright (C) 2011 by Anthony Robinson
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<j:jelly xmlns:j="jelly:core">
+    <div>Run if the Expression matches the Label.
+    <p>Both the Expression and the Label will be expanded with the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Token+Macro+Plugin">Token Macro Plugin</a>.<br />
+        The Expression is a regular expression using the <a href="http://download.oracle.com/javase/1.5.0/docs/api/index.html?java/util/regex/Pattern.html">Java syntax</a>.</p>
+        <p>
+            Examples:
+            <ol>
+                <li>Parameterized publishing similar to the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Publish+Over+...#PublishOver...-Parameterizedpublishing">Publish Over</a> family of publishers.
+                    <ul>
+                        <li>Select &quot;This build is parameterized&quot; from the top of the job configuration, and add a String parameter</li>
+                        <li>Enter $${ENV,var=&quot;PARAMETER_NAME&quot;} as the Expression</li>
+                        <li>Give the publisher a Label e.g. UAT or RELEASE</li>
+                        <li>Trigger a build passing in a regular expression as the value of PARAMETER_NAME e.g. INT|UAT</li>
+                    </ul>
+                </li>
+                <li>Use a fixed regular expression to match against a property value in a property file that is generated during the build.</li>
+            </ol>
+        </p>
+    <p>The following Token Macros are available in this Jenkins instance:
+    <help xmlns="/lib/token-macro"/>
+    <hr />
+        End of &quot;${descriptor.displayName}&quot; description
+    <hr />
+    </p></div>
+</j:jelly>
