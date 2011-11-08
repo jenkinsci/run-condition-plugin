@@ -29,12 +29,8 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import org.jenkins_ci.plugins.run_condition.Messages;
 import org.jenkins_ci.plugins.run_condition.RunCondition;
-import org.jenkinsci.plugins.tokenmacro.MacroEvaluationException;
-import org.jenkinsci.plugins.tokenmacro.TokenMacro;
+import org.jenkins_ci.plugins.run_condition.helper.TokenHelper;
 import org.kohsuke.stapler.DataBoundConstructor;
-
-import java.io.IOException;
-import java.util.regex.Pattern;
 
 public class ExpressionCondition extends RunCondition {
 
@@ -63,24 +59,12 @@ public class ExpressionCondition extends RunCondition {
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
         if (expression == null) return false;
-        final String expandedExpression = expand(build, listener, expression);
-        String expandedLabel = expand(build, listener, label);
+        final String expandedExpression = TokenHelper.expand(build, listener, expression);
+        String expandedLabel = TokenHelper.expand(build, listener, label);
         if (expandedLabel == null) expandedLabel = "";
         listener.getLogger().println(Messages.expressionCondition_console_args(expandedExpression, expandedLabel));
         if (expandedExpression == null) return false;
         return expandedLabel.matches(expandedExpression);
-    }
-
-    private String expand(final AbstractBuild build, final BuildListener listener, final String template) {
-        try {
-            return TokenMacro.expand(build, listener, template);
-        } catch (MacroEvaluationException mee) {
-            throw new RuntimeException(mee);
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
-        } catch (InterruptedException ie) {
-            throw new RuntimeException(ie);
-        }
     }
 
     @Extension
