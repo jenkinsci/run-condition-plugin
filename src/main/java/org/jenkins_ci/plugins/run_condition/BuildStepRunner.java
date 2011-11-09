@@ -151,8 +151,7 @@ public abstract class BuildStepRunner implements Describable<BuildStepRunner> {
                 setResult(build, Result.FAILURE);
                 return false;
             }
-            if (run) return target.run();
-            return true;
+            return run ? target.run() : true;
         }
 
         @Extension(ordinal = 0)
@@ -180,8 +179,7 @@ public abstract class BuildStepRunner implements Describable<BuildStepRunner> {
                 logEvaluateException(listener, e, Messages.runner_unstable_displayName());
                 setResult(build, Result.UNSTABLE);
             }
-            if (run) return target.run();
-            return true;
+            return run ? target.run() : true;
         }
 
         @Extension(ordinal = -1)
@@ -209,8 +207,7 @@ public abstract class BuildStepRunner implements Describable<BuildStepRunner> {
                 logEvaluateException(listener, e, Messages.runner_runUnstable_displayName());
                 setResult(build, Result.UNSTABLE);
             }
-            if (run) return target.run();
-            return true;
+            return run ? target.run() : true;
         }
 
         @Extension(ordinal = -2)
@@ -237,8 +234,7 @@ public abstract class BuildStepRunner implements Describable<BuildStepRunner> {
             } catch (final Exception e) {
                 logEvaluateException(listener, e, Messages.runner_run_displayName());
             }
-            if (run) return target.run();
-            return true;
+            return run ? target.run() : true;
         }
 
         @Extension(ordinal = -3)
@@ -265,8 +261,7 @@ public abstract class BuildStepRunner implements Describable<BuildStepRunner> {
             } catch (final Exception e) {
                 logEvaluateException(listener, e, Messages.runner_dontRun_displayName());
             }
-            if (run) return target.run();
-            return true;
+            return run ? target.run() : true;
         }
 
         @Extension(ordinal = -4)
