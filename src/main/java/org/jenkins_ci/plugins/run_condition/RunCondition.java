@@ -41,8 +41,8 @@ public abstract class RunCondition implements Describable<RunCondition>, Extensi
         return Hudson.getInstance().<RunCondition, RunConditionDescriptor>getDescriptorList(RunCondition.class);
     }
 
-    public abstract boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener);
-    public abstract boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener);
+    public abstract boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception;
+    public abstract boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception;
 
     public RunConditionDescriptor getDescriptor() {
         return (RunConditionDescriptor)Hudson.getInstance().getDescriptor(getClass());

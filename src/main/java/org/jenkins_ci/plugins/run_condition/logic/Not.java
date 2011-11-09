@@ -48,12 +48,12 @@ public class Not extends RunCondition {
     }
 
     @Override
-    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) {
+    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
         return !condition.runPrebuild(build, listener);
     }
 
     @Override
-    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
+    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
         return !condition.runPerform(build, listener);
     }
 

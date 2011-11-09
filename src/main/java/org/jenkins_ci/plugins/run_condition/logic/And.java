@@ -49,7 +49,7 @@ public class And extends RunCondition {
     }
 
     @Override
-    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) {
+    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
         for (ConditionContainer condition : conditions)
             if (!condition.runPrebuild(build, listener))
                 return false;
@@ -57,7 +57,7 @@ public class And extends RunCondition {
     }
 
     @Override
-    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
+    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
         for (ConditionContainer condition : conditions)
             if (!condition.runPerform(build, listener))
                 return false;

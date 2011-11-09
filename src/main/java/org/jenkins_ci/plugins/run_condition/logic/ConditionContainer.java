@@ -52,11 +52,11 @@ public class ConditionContainer implements Describable<ConditionContainer> {
         return Hudson.getInstance().getDescriptorByType(ConditionContainerDescriptor.class);
     }
 
-    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) {
+    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
         return condition.runPrebuild(build, listener);
     }
 
-    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
+    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
         return condition.runPerform(build, listener);
     }
 

@@ -33,7 +33,7 @@ import hudson.model.Hudson;
 import hudson.util.FormValidation;
 import org.jenkins_ci.plugins.run_condition.Messages;
 import org.jenkins_ci.plugins.run_condition.RunCondition;
-import org.jenkins_ci.plugins.run_condition.helper.TokenHelper;
+import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -70,11 +70,12 @@ public class NumericalComparisonCondition extends RunCondition {
     }
 
     @Override
-    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
-        final Double left = TokenHelper.toDouble(build, listener, lhs);
-        final Double right = TokenHelper.toDouble(build, listener, rhs);
+    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
+        final String leftString = TokenMacro.expand(build, listener, lhs);
+        final double left = Double.parseDouble(leftString);
+        final String rightString = TokenMacro.expand(build, listener, rhs);
+        final double right = Double.parseDouble(rightString);
         listener.getLogger().println(Messages.numericalComparison_console_args(left, comparator.getDescriptor().getDisplayName(), right));
-        if ((left == null) || (right == null)) return false;
         return comparator.isTrue(left, right);
     }
 

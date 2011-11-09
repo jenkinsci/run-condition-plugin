@@ -29,7 +29,7 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import org.jenkins_ci.plugins.run_condition.Messages;
 import org.jenkins_ci.plugins.run_condition.RunCondition;
-import org.jenkins_ci.plugins.run_condition.helper.TokenHelper;
+import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public class ExpressionCondition extends RunCondition {
@@ -57,13 +57,10 @@ public class ExpressionCondition extends RunCondition {
     }
 
     @Override
-    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
-        if (expression == null) return false;
-        final String expandedExpression = TokenHelper.expand(build, listener, expression);
-        String expandedLabel = TokenHelper.expand(build, listener, label);
-        if (expandedLabel == null) expandedLabel = "";
+    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
+        final String expandedExpression = TokenMacro.expand(build, listener, expression);
+        String expandedLabel = TokenMacro.expand(build, listener, label);
         listener.getLogger().println(Messages.expressionCondition_console_args(expandedExpression, expandedLabel));
-        if (expandedExpression == null) return false;
         return expandedLabel.matches(expandedExpression);
     }
 
