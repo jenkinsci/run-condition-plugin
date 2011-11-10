@@ -41,10 +41,5 @@
                 <li>Use a fixed regular expression to match against a property value in a property file that is generated during the build.</li>
             </ol>
         </p>
-    <p>The following Token Macros are available in this Jenkins instance:
-    <help xmlns="/lib/token-macro"/>
-    <hr />
-        End of &quot;${descriptor.displayName}&quot; description
-    <hr />
-    </p></div>
+    </div>
 </j:jelly>
