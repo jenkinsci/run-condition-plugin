@@ -53,7 +53,7 @@ public abstract class BuildStepRunner implements Describable<BuildStepRunner> {
 
     private static void logEvaluateException(final BuildListener listener, final Exception e, final String displayName) {
         final String msg = Messages.runner_console_exception(e.getClass().getName() + ": " + e.getLocalizedMessage(), displayName);
-        LOGGER.log(Level.WARNING, msg);
+        LOGGER.log(Level.WARNING, msg, e);
         listener.getLogger().println(msg);
     }
 
