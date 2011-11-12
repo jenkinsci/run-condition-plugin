@@ -30,14 +30,14 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.util.FormValidation;
 import org.jenkins_ci.plugins.run_condition.Messages;
-import org.jenkins_ci.plugins.run_condition.RunCondition;
+import org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
 import java.util.regex.Pattern;
 
-public class BooleanCondition extends RunCondition {
+public final class BooleanCondition extends AlwaysPrebuildRunCondition {
 
     private static final Pattern RUN_REGEX = Pattern.compile("^(1|y|yes|t|true|on|run)$");
     final String token;
@@ -49,11 +49,6 @@ public class BooleanCondition extends RunCondition {
 
     public String getToken() {
         return token;
-    }
-
-    @Override
-    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) {
-        return true;
     }
 
     @Override

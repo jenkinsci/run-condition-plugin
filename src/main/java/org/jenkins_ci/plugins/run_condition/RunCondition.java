@@ -55,6 +55,9 @@ public abstract class RunCondition implements Describable<RunCondition>, Extensi
      * return the same as the runPerform method.
      * 
      * @return true if the prebuild method of the BuildStep should run
+     * 
+     * @see org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition
+     * @see org.jenkins_ci.plugins.run_condition.common.PrebuildSameAsPerformRunCondition
      */
     public abstract boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception;
 

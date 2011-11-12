@@ -32,13 +32,13 @@ import hudson.model.BuildListener;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import org.jenkins_ci.plugins.run_condition.Messages;
-import org.jenkins_ci.plugins.run_condition.RunCondition;
+import org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition;
 import org.jenkins_ci.plugins.run_condition.common.BaseDirectory;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.util.List;
 
-public class FilesMatchCondition extends RunCondition {
+public final class FilesMatchCondition extends AlwaysPrebuildRunCondition {
 
     final String includes;
     final String excludes;
@@ -61,11 +61,6 @@ public class FilesMatchCondition extends RunCondition {
 
     public String getExcludes() {
         return excludes;
-    }
-
-    @Override
-    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) {
-        return true;
     }
 
     @Override

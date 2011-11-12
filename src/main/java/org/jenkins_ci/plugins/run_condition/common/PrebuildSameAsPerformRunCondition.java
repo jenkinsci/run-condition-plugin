@@ -22,33 +22,24 @@
  * THE SOFTWARE.
  */
 
-package org.jenkins_ci.plugins.run_condition.core;
+package org.jenkins_ci.plugins.run_condition.common;
 
-import hudson.Extension;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
-import org.jenkins_ci.plugins.run_condition.Messages;
-import org.jenkins_ci.plugins.run_condition.common.PrebuildSameAsPerformRunCondition;
-import org.kohsuke.stapler.DataBoundConstructor;
+import org.jenkins_ci.plugins.run_condition.RunCondition;
 
-public final class AlwaysRun extends PrebuildSameAsPerformRunCondition {
-
-    @DataBoundConstructor
-    public AlwaysRun() {}
+public abstract class PrebuildSameAsPerformRunCondition extends RunCondition {
 
     @Override
-    public boolean runBuildStep(final AbstractBuild<?, ?> build, final BuildListener listener) {
-        return true;
+    public final boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
+        return runBuildStep(build, listener);
     }
 
-    @Extension(ordinal = 1000001)
-    public static class AlwaysRunDescriptor extends RunConditionDescriptor {
-
-        @Override
-        public String getDisplayName() {
-            return Messages.alwaysRun_displayName();
-        }
-
+    @Override
+    public final boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
+        return runBuildStep(build, listener);
     }
+
+    protected abstract boolean runBuildStep(AbstractBuild<?, ?> build, BuildListener listener) throws Exception;
 
 }

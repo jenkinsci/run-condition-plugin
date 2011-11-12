@@ -27,13 +27,11 @@ package org.jenkins_ci.plugins.run_condition.logic;
 import hudson.Extension;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
-import hudson.model.Descriptor;
 import org.jenkins_ci.plugins.run_condition.Messages;
 import org.jenkins_ci.plugins.run_condition.RunCondition;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class And extends RunCondition {
 

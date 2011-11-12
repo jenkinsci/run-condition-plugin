@@ -31,7 +31,7 @@ import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import hudson.util.FormValidation;
 import org.jenkins_ci.plugins.run_condition.Messages;
-import org.jenkins_ci.plugins.run_condition.RunCondition;
+import org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition;
 import org.jenkins_ci.plugins.run_condition.common.BaseDirectory;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -39,7 +39,7 @@ import org.kohsuke.stapler.QueryParameter;
 
 import java.util.List;
 
-public class FileExistsCondition extends RunCondition {
+public final class FileExistsCondition extends AlwaysPrebuildRunCondition {
 
     final String file;
     final BaseDirectory baseDir;
@@ -56,11 +56,6 @@ public class FileExistsCondition extends RunCondition {
 
     public String getFile() {
         return file;
-    }
-
-    @Override
-    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) {
-        return true;
     }
 
     @Override

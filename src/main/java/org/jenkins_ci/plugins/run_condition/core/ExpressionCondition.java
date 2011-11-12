@@ -28,11 +28,11 @@ import hudson.Extension;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import org.jenkins_ci.plugins.run_condition.Messages;
-import org.jenkins_ci.plugins.run_condition.RunCondition;
+import org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-public class ExpressionCondition extends RunCondition {
+public class ExpressionCondition extends AlwaysPrebuildRunCondition {
 
     final String expression;
     final String label;
@@ -49,11 +49,6 @@ public class ExpressionCondition extends RunCondition {
 
     public String getExpression() {
         return expression;
-    }
-
-    @Override
-    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) {
-        return true;
     }
 
     @Override

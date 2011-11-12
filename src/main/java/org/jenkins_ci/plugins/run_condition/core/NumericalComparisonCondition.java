@@ -32,14 +32,14 @@ import hudson.model.Descriptor;
 import hudson.model.Hudson;
 import hudson.util.FormValidation;
 import org.jenkins_ci.plugins.run_condition.Messages;
-import org.jenkins_ci.plugins.run_condition.RunCondition;
+import org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
 import java.util.List;
 
-public class NumericalComparisonCondition extends RunCondition {
+public final class NumericalComparisonCondition extends AlwaysPrebuildRunCondition {
 
     final String lhs;
     final String rhs;
@@ -62,11 +62,6 @@ public class NumericalComparisonCondition extends RunCondition {
 
     public Comparator getComparator() {
         return comparator;
-    }
-
-    @Override
-    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) {
-        return true;
     }
 
     @Override

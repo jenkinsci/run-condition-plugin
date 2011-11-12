@@ -28,21 +28,16 @@ import hudson.Extension;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import org.jenkins_ci.plugins.run_condition.Messages;
-import org.jenkins_ci.plugins.run_condition.RunCondition;
+import org.jenkins_ci.plugins.run_condition.common.PrebuildSameAsPerformRunCondition;
 import org.kohsuke.stapler.DataBoundConstructor;
 
-public class NeverRun extends RunCondition {
+public final class NeverRun extends PrebuildSameAsPerformRunCondition {
 
     @DataBoundConstructor
     public NeverRun() {}
 
     @Override
-    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) {
-        return false;
-    }
-
-    @Override
-    public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
+    public boolean runBuildStep(final AbstractBuild<?, ?> build, final BuildListener listener) {
         return false;
     }
 

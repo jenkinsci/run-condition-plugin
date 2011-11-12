@@ -32,11 +32,11 @@ import hudson.model.Result;
 import hudson.util.FormValidation;
 import hudson.util.ListBoxModel;
 import org.jenkins_ci.plugins.run_condition.Messages;
-import org.jenkins_ci.plugins.run_condition.RunCondition;
+import org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
-public class StatusCondition extends RunCondition {
+public final class StatusCondition extends AlwaysPrebuildRunCondition {
 
     private static final Result[] ALL_RESULTS = new Result[] {Result.SUCCESS, Result.UNSTABLE, Result.FAILURE, Result.NOT_BUILT,
                                                                                                                             Result.ABORTED};
@@ -63,11 +63,6 @@ public class StatusCondition extends RunCondition {
 
     public Result getWorstResult() {
         return worstResult;
-    }
-
-    @Override
-    public boolean runPrebuild(final AbstractBuild<?, ?> build, final BuildListener listener) {
-        return true;
     }
 
     @Override
