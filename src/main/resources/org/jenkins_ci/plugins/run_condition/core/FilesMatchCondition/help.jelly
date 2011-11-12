@@ -28,6 +28,6 @@
     <p>Separate multiple includes or excludes patterns with a comma. e.g. Includes &quot;target/site/**/*.html,target/site/images/&quot;
         Excludes &quot;**/*.gif&quot;<br />
        If no includes pattern is configured, then the pattern &quot;**&quot; will be used, which matches all files in the directory and all sub directories.<br />
-       The includes and excludes are <a href="http://ant.apache.org/manual/dirtasks.html#patterns">Ant Patterns</a>.<br />
+       The includes and excludes are <a href="http://ant.apache.org/manual/dirtasks.html#patterns" target="_blank">Ant Patterns</a>.<br />
     </p></div>
 </j:jelly>

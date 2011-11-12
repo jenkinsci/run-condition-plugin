@@ -25,12 +25,12 @@
 
 <j:jelly xmlns:j="jelly:core">
     <div>Run if the Expression matches the Label.
-    <p>Both the Expression and the Label will be expanded with the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Token+Macro+Plugin">Token Macro Plugin</a>.<br />
-        The Expression is a regular expression using the <a href="http://download.oracle.com/javase/1.5.0/docs/api/index.html?java/util/regex/Pattern.html">Java syntax</a>.</p>
+    <p>Both the Expression and the Label will be expanded with the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Token+Macro+Plugin" target="_blank">Token Macro Plugin</a>.<br />
+        The Expression is a regular expression using the <a href="http://download.oracle.com/javase/1.5.0/docs/api/index.html?java/util/regex/Pattern.html" target="_blank">Java syntax</a>.</p>
         <p>
             Examples:
             <ol>
-                <li>Parameterized publishing similar to the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Publish+Over+...#PublishOver...-Parameterizedpublishing">Publish Over</a> family of publishers.
+                <li>Parameterized publishing similar to the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Publish+Over+...#PublishOver...-Parameterizedpublishing" target="_blank">Publish Over</a> family of publishers.
                     <ul>
                         <li>Select &quot;This build is parameterized&quot; from the top of the job configuration, and add a String parameter</li>
                         <li>Enter $${ENV,var=&quot;PARAMETER_NAME&quot;} as the Expression</li>

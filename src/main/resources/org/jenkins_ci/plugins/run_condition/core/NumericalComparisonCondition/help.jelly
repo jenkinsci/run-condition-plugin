@@ -25,9 +25,9 @@
 
 <j:jelly xmlns:j="jelly:core">
     <div>Run if the numerical comparison is true.
-    <p>The Left hand side and the Right hand side will be expanded with the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Token+Macro+Plugin">Token Macro Plugin</a>.<br />
+    <p>The Left hand side and the Right hand side will be expanded with the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Token+Macro+Plugin" target="_blank">Token Macro Plugin</a>.<br />
        Both arguments must evaluate to a number.<br/>
-       Check out the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Static+Code+Analysis+Plug-ins#StaticCodeAnalysisPlug-ins-tokens">tokens</a> provided by the 
-        <a href="https://wiki.jenkins-ci.org/display/JENKINS/Static+Code+Analysis+Plug-ins">Static Code Analysis Plugins</a> for some awesome conditional execution options.
+       Check out the <a href="https://wiki.jenkins-ci.org/display/JENKINS/Static+Code+Analysis+Plug-ins#StaticCodeAnalysisPlug-ins-tokens" target="_blank">tokens</a> provided by the 
+        <a href="https://wiki.jenkins-ci.org/display/JENKINS/Static+Code+Analysis+Plug-ins" target="_blank">Static Code Analysis Plugins</a> for some awesome conditional execution options.
     </p></div>
 </j:jelly>
