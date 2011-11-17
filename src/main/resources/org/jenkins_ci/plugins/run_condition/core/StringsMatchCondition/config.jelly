@@ -28,7 +28,7 @@
     <f:entry title="${%arg1}" field="arg1">
         <f:textbox/>
     </f:entry>
-    <f:entry title="${%arg1}" field="arg2">
+    <f:entry title="${%arg2}" field="arg2">
         <f:textbox/>
     </f:entry>
     <f:entry title="${%ignoreCase}" field="ignoreCase">
