@@ -66,9 +66,9 @@ public final class NumericalComparisonCondition extends AlwaysPrebuildRunConditi
 
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
-        final String leftString = TokenMacro.expand(build, listener, lhs);
+        final String leftString = TokenMacro.expandAll(build, listener, lhs);
         final double left = Double.parseDouble(leftString);
-        final String rightString = TokenMacro.expand(build, listener, rhs);
+        final String rightString = TokenMacro.expandAll(build, listener, rhs);
         final double right = Double.parseDouble(rightString);
         listener.getLogger().println(Messages.numericalComparison_console_args(left, comparator.getDescriptor().getDisplayName(), right));
         return comparator.isTrue(left, right);

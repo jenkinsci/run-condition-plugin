@@ -59,8 +59,8 @@ public class StringsMatchCondition extends AlwaysPrebuildRunCondition {
 
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
-        final String expanded1 = TokenMacro.expand(build, listener, arg1);
-        final String expanded2 = TokenMacro.expand(build, listener, arg2);
+        final String expanded1 = TokenMacro.expandAll(build, listener, arg1);
+        final String expanded2 = TokenMacro.expandAll(build, listener, arg2);
         listener.getLogger().println(Messages.stringsMatchCondition_console_args(expanded1, expanded2));
         if (expanded1 == null) return false;
         return ignoreCase ? expanded1.equalsIgnoreCase(expanded2) : expanded1.equals(expanded2);
