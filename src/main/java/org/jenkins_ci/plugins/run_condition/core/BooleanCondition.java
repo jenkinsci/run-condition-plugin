@@ -53,7 +53,7 @@ public final class BooleanCondition extends AlwaysPrebuildRunCondition {
 
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
-        final String expandedToken = Util.fixEmptyAndTrim(TokenMacro.expand(build, listener, token));
+        final String expandedToken = Util.fixEmptyAndTrim(TokenMacro.expandAll(build, listener, token));
         if (expandedToken == null) return false;
         return RUN_REGEX.matcher(expandedToken.toLowerCase()).matches();
     }

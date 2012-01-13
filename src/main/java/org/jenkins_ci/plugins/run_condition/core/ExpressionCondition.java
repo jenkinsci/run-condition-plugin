@@ -53,8 +53,8 @@ public class ExpressionCondition extends AlwaysPrebuildRunCondition {
 
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
-        final String expandedExpression = TokenMacro.expand(build, listener, expression);
-        String expandedLabel = TokenMacro.expand(build, listener, label);
+        final String expandedExpression = TokenMacro.expandAll(build, listener, expression);
+        String expandedLabel = TokenMacro.expandAll(build, listener, label);
         listener.getLogger().println(Messages.expressionCondition_console_args(expandedExpression, expandedLabel));
         return expandedLabel.matches(expandedExpression);
     }
