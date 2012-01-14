@@ -56,7 +56,7 @@ public class DayConditionTest {
     }
 
     @After
-    public void tesrDown() throws Exception {
+    public void tearDown() throws Exception {
         logger.close();
     }
 
@@ -119,7 +119,7 @@ public class DayConditionTest {
     @Test
     public void testSelectDaysAllSelected() throws Exception {
         final ArrayList<DayCondition.Day> days = new ArrayList<DayCondition.Day>();
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 8; i++)
             days.add(new DayCondition.Day(i, true));
         final DayCondition condition = new DayCondition(false, new DayCondition.SelectDays(days));
         currentTime.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
