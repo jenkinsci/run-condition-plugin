@@ -30,25 +30,24 @@ The current build status
     public StatusCondition(final String worstResult, final String bestResult)
     public StatusCondition(final Result worstResult, final Result bestResult)
 */
-package org.jenkins_ci.plugins.run_condition.core.test;
+package org.jenkins_ci.plugins.run_condition.core;
 
-import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
-import java.lang.RuntimeException;
-
 import org.jenkins_ci.plugins.run_condition.RunCondition;
-import org.jenkins_ci.plugins.run_condition.core.StatusCondition;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
-import java.util.ArrayList;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.reset;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 
 public class StatusConditionTest{
