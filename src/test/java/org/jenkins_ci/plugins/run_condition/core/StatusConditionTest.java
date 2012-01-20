@@ -113,7 +113,6 @@ public class StatusConditionTest {
         new StatusCondition("ABORTED", "INVALID_BUILD_STATUS");
     }
 
-
     @Test
     public void testSuccessSuccess() throws Exception {
         /*    worstResult,    bestResult,     buildResult,    expected
@@ -344,7 +343,7 @@ public class StatusConditionTest {
                 false};
 
         for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.SUCCESS, Result.UNSTABLE, BuildResults[i], expresults[i]);
+            testResultcase(Result.SUCCESS, Result.FAILURE, BuildResults[i], expresults[i]);
         }
     }
 
@@ -360,13 +359,13 @@ public class StatusConditionTest {
         */
         boolean[] expresults = {
                 false,
-                true,
+                false,
                 false,
                 false,
                 false};
 
         for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.UNSTABLE, Result.UNSTABLE, BuildResults[i], expresults[i]);
+            testResultcase(Result.UNSTABLE, Result.FAILURE, BuildResults[i], expresults[i]);
         }
     }
 
@@ -381,13 +380,13 @@ public class StatusConditionTest {
         */
         boolean[] expresults = {
                 false,
-                true,
+                false,
                 true,
                 false,
                 false};
 
         for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.FAILURE, Result.UNSTABLE, BuildResults[i], expresults[i]);
+            testResultcase(Result.FAILURE, Result.FAILURE, BuildResults[i], expresults[i]);
         }
     }
 
@@ -402,13 +401,13 @@ public class StatusConditionTest {
         */
         boolean[] expresults = {
                 false,
-                true,
+                false,
                 true,
                 true,
                 false};
 
         for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.NOT_BUILT, Result.UNSTABLE, BuildResults[i], expresults[i]);
+            testResultcase(Result.NOT_BUILT, Result.FAILURE, BuildResults[i], expresults[i]);
         }
     }
 
@@ -423,13 +422,13 @@ public class StatusConditionTest {
         */
         boolean[] expresults = {
                 false,
-                true,
+                false,
                 true,
                 true,
                 true};
 
         for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.ABORTED, Result.UNSTABLE, BuildResults[i], expresults[i]);
+            testResultcase(Result.ABORTED, Result.FAILURE, BuildResults[i], expresults[i]);
         }
     }
 
