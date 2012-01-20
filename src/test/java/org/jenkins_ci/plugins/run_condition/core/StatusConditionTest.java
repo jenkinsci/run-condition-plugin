@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright (C) 2011 by Anthony Robinson
+ * Copyright (C) 2012 by Chris Johnson, Anthony Robinson
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,14 +22,6 @@
  * THE SOFTWARE.
  */
 
-/*
-The current build status
-    must be equal to, or better than the Worst status and equal to,
-    or worse than the Best status for the build step to run
-
-    public StatusCondition(final String worstResult, final String bestResult)
-    public StatusCondition(final Result worstResult, final Result bestResult)
-*/
 package org.jenkins_ci.plugins.run_condition.core;
 
 import hudson.model.BuildListener;
@@ -69,28 +61,6 @@ public class StatusConditionTest {
     public void setUp() throws Exception {
         expect(listener.getLogger()).andReturn(logger).anyTimes();
         replay(listener);
-
-        /* This code prints all of the actual results for all possible cases
-           which can be used to check the expected changes */
-/*
-        for(Result worstcond : BuildResults)
-        {
-            for (Result bestcond : BuildResults)
-            {
-                for (Result buildcond : BuildResults)
-                {
-                    reset(build);
-                    expect(build.getResult()).andReturn(buildcond).anyTimes();
-                    replay(build);
-
-                    RunCondition condition = new StatusCondition(worstcond, bestcond);
-                    System.out.print(worstcond.toString() + " " + bestcond.toString() + " ");
-                    System.out.print(buildcond.toString());
-                    System.out.println(" a: " + condition.runPerform(build, listener));
-                }
-            }
-        }
-*/
     }
 
     @After
@@ -100,7 +70,6 @@ public class StatusConditionTest {
 
     @Test
     public void testStringConstructorSuccess() throws Exception {
-        /*   test than string constructor is correct. */
         StatusCondition condition = new StatusCondition("SUCCESS", "SUCCESS");
         assertEquals(Result.SUCCESS, condition.getBestResult());
         assertEquals(Result.SUCCESS, condition.getWorstResult());
@@ -108,7 +77,6 @@ public class StatusConditionTest {
 
     @Test
     public void testStringConstructorUnstable() throws Exception {
-        /*   test than string constructor is correct. */
         StatusCondition condition = new StatusCondition("UNSTABLE", "UNSTABLE");
         assertEquals(Result.UNSTABLE, condition.getBestResult());
         assertEquals(Result.UNSTABLE, condition.getWorstResult());
@@ -116,7 +84,6 @@ public class StatusConditionTest {
 
     @Test
     public void testStringConstructorFailure() throws Exception {
-        /*   test than string constructor is correct. */
         StatusCondition condition = new StatusCondition("FAILURE", "FAILURE");
         assertEquals(Result.FAILURE, condition.getBestResult());
         assertEquals(Result.FAILURE, condition.getWorstResult());
@@ -124,7 +91,6 @@ public class StatusConditionTest {
 
     @Test
     public void testStringConstructorNotBuilt() throws Exception {
-        /*   test than string constructor is correct. */
         StatusCondition condition = new StatusCondition("NOT_BUILT", "NOT_BUILT");
         assertEquals(Result.NOT_BUILT, condition.getBestResult());
         assertEquals(Result.NOT_BUILT, condition.getWorstResult());
@@ -132,7 +98,6 @@ public class StatusConditionTest {
 
     @Test
     public void testStringConstructorAborted() throws Exception {
-        /*   test than string constructor is correct. */
         StatusCondition condition = new StatusCondition("ABORTED", "ABORTED");
         assertEquals(Result.ABORTED, condition.getBestResult());
         assertEquals(Result.ABORTED, condition.getWorstResult());
@@ -140,18 +105,12 @@ public class StatusConditionTest {
 
     @Test(expected = RuntimeException.class)
     public void testStringConstructorInvalidWorst() throws Exception {
-        /*   test than string constructor is correct. */
-        StatusCondition condition = new StatusCondition("INVALID_BUILD_STATUS", "ABORTED");
-        assertEquals(Result.ABORTED, condition.getBestResult());
-        assertEquals(Result.ABORTED, condition.getWorstResult());
+        new StatusCondition("INVALID_BUILD_STATUS", "ABORTED");
     }
 
     @Test(expected = RuntimeException.class)
     public void testStringConstructorInvalidBest() throws Exception {
-        /*   test than string constructor is correct. */
-        StatusCondition condition = new StatusCondition("ABORTED", "INVALID_BUILD_STATUS");
-        assertEquals(Result.ABORTED, condition.getBestResult());
-        assertEquals(Result.ABORTED, condition.getWorstResult());
+        new StatusCondition("ABORTED", "INVALID_BUILD_STATUS");
     }
 
 
