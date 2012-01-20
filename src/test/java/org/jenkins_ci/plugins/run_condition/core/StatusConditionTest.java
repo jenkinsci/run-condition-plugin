@@ -27,7 +27,6 @@ package org.jenkins_ci.plugins.run_condition.core;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
-import org.jenkins_ci.plugins.run_condition.RunCondition;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,12 +34,18 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
+import static hudson.model.Result.ABORTED;
+import static hudson.model.Result.FAILURE;
+import static hudson.model.Result.NOT_BUILT;
+import static hudson.model.Result.SUCCESS;
+import static hudson.model.Result.UNSTABLE;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class StatusConditionTest {
 
@@ -115,23 +120,12 @@ public class StatusConditionTest {
 
     @Test
     public void testSuccessSuccess() throws Exception {
-        /*    worstResult,    bestResult,     buildResult,    expected
-        Success         Success         Success         true
-        Success         Success         Unstable        false
-        Success         Success         Failure         false
-        Success         Success         Not_built       false
-        Success         Success         Aborted         false
-        */
-        boolean[] expresults = {
-                true,
-                false,
-                false,
-                false,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.SUCCESS, Result.SUCCESS, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(SUCCESS, SUCCESS);
+        assertRunResult(condition, SUCCESS, true);
+        assertRunResult(condition, UNSTABLE, false);
+        assertRunResult(condition, FAILURE, false);
+        assertRunResult(condition, NOT_BUILT, false);
+        assertRunResult(condition, ABORTED, false);
     }
 
     @Test
@@ -433,25 +427,17 @@ public class StatusConditionTest {
     }
 
     private void testResultcase(Result worstresult, Result bestresult, Result buildresult, boolean expected) throws Exception {
+        assertRunResult(new StatusCondition(worstresult, bestresult), buildresult, expected);
+    }
+
+    private void assertRunResult(StatusCondition condition, Result buildResult, boolean expected) throws Exception {
         reset(build);
-        expect(build.getResult()).andReturn(buildresult).anyTimes();
+        expect(build.getResult()).andReturn(buildResult).anyTimes();
         replay(build);
 
-        RunCondition condition = new StatusCondition(worstresult, bestresult);
-        assertCondition(condition, expected);
+        assertTrue(condition.runPrebuild(build, listener));
+        assertEquals(expected, condition.runPerform(build, listener));
         verify(build);
     }
 
-    /**
-     * checks for the correct responce
-     * buildResult Result of the build.
-     * expectedRunPerform: true/false if the condition should proceed.
-     */
-    private void assertCondition(final RunCondition condition,
-                                 final boolean expectedRunPerform)
-            throws Exception {
-        assertEquals(true, condition.runPrebuild(build, listener));
-        assertEquals(expectedRunPerform, condition.runPerform(build, listener));
-
-    }
 }
