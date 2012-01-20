@@ -53,10 +53,13 @@ public final class StatusCondition extends AlwaysPrebuildRunCondition {
 
     @DataBoundConstructor
     public StatusCondition(final String worstResult, final String bestResult) {
-        this.worstResult = resultFormString(worstResult);
-        this.bestResult = resultFormString(bestResult);
+        this(resultFormString(worstResult), resultFormString(bestResult));
     }
 
+    public StatusCondition(final Result worstResult, final Result bestResult) {
+        this.worstResult = worstResult;
+        this.bestResult = bestResult;
+    }
     public Result getBestResult() {
         return bestResult;
     }
