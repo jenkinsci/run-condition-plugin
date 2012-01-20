@@ -65,6 +65,12 @@
             <artifactId>token-macro</artifactId>
             <version>1.5.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+            <version>3.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <scm>
