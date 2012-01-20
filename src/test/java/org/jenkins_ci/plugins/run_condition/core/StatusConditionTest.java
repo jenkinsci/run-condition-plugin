@@ -53,14 +53,7 @@ public class StatusConditionTest {
     private final PrintStream logger = new PrintStream(new ByteArrayOutputStream());
     private final FreeStyleBuild build = createMock(FreeStyleBuild.class);
 
-    private static Result[] BuildResults = {
-            Result.SUCCESS,
-            Result.UNSTABLE,
-            Result.FAILURE,
-            Result.NOT_BUILT,
-            Result.ABORTED};
-
-    private static int RESULTCOUNT = 5;
+    private static Result[] BuildResults = { SUCCESS, UNSTABLE, FAILURE, NOT_BUILT, ABORTED };
 
     @Before
     public void setUp() throws Exception {
@@ -130,307 +123,135 @@ public class StatusConditionTest {
 
     @Test
     public void testUnstableSuccess() throws Exception {
-        /*    worstResult,    bestResult,     buildResult,    expected
-        Unstable         Success         Success         true
-        Unstable         Success         Unstable        true
-        Unstable         Success         Failure         false
-        Unstable         Success         Not_built       false
-        Unstable         Success         Aborted         false
-        */
-        boolean[] expresults = {
-                true,
-                true,
-                false,
-                false,
-                false};
-
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.UNSTABLE, Result.SUCCESS, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(UNSTABLE, SUCCESS);
+        assertRunResult(condition, SUCCESS, true);
+        assertRunResult(condition, UNSTABLE, true);
+        assertRunResult(condition, FAILURE, false);
+        assertRunResult(condition, NOT_BUILT, false);
+        assertRunResult(condition, ABORTED, false);
     }
 
     @Test
     public void testFailureSuccess() throws Exception {
-        /*    worstResult,    bestResult,     buildResult,    expected
-        Failure         Success         Success         true
-        Failure         Success         Unstable        true
-        Failure         Success         Failure         true
-        Failure         Success         Not_built       false
-        Failure         Success         Aborted         false
-        */
-        boolean[] expresults = {
-                true,
-                true,
-                true,
-                false,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.FAILURE, Result.SUCCESS, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(FAILURE, SUCCESS);
+        assertRunResult(condition, SUCCESS, true);
+        assertRunResult(condition, UNSTABLE, true);
+        assertRunResult(condition, FAILURE, true);
+        assertRunResult(condition, NOT_BUILT, false);
+        assertRunResult(condition, ABORTED, false);
     }
 
     @Test
     public void testNotBuiltSuccess() throws Exception {
-        /*    worstResult,    bestResult,     buildResult,    expected
-        Not_built         Success         Success         true
-        Not_built         Success         Unstable        true
-        Not_built         Success         Failure         true
-        Not_built         Success         Not_built       true
-        Not_built         Success         Aborted         false
-        */
-        boolean[] expresults = {
-                true,
-                true,
-                true,
-                true,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.NOT_BUILT, Result.SUCCESS, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(NOT_BUILT, SUCCESS);
+        assertRunResult(condition, SUCCESS, true);
+        assertRunResult(condition, UNSTABLE, true);
+        assertRunResult(condition, FAILURE, true);
+        assertRunResult(condition, NOT_BUILT, true);
+        assertRunResult(condition, ABORTED, false);
     }
 
     @Test
     public void testAbortedSuccess() throws Exception {
-        /*    worstResult,    bestResult,     buildResult,    expected
-        Aborted         Success         Success         true
-        Aborted         Success         Unstable        true
-        Aborted         Success         Failure         true
-        Aborted         Success         Not_built       true
-        Aborted         Success         Aborted         true
-        */
-        boolean[] expresults = {
-                true,
-                true,
-                true,
-                true,
-                true};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.ABORTED, Result.SUCCESS, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(ABORTED, SUCCESS);
+        assertRunResult(condition, SUCCESS, true);
+        assertRunResult(condition, UNSTABLE, true);
+        assertRunResult(condition, FAILURE, true);
+        assertRunResult(condition, NOT_BUILT, true);
+        assertRunResult(condition, ABORTED, true);
     }
 
     @Test
-    public void testSuccessUnstable() throws Exception {
-        /* never can be valid as possible statuses not inclusive
-            worstResult,    bestResult,     buildResult,    expected
-        Success         Unstable         Success         false
-        Success         Unstable         Unstable        false
-        Success         Unstable         Failure         false
-        Success         Unstable         Not_built       false
-        Success         Unstable         Aborted         false
-        */
-        boolean[] expresults = {
-                false,
-                false,
-                false,
-                false,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.SUCCESS, Result.UNSTABLE, BuildResults[i], expresults[i]);
-        }
+    public void testSuccessUnstableNeverTrue() throws Exception {
+        assertRunPerformAlwaysFalse(new StatusCondition(SUCCESS, UNSTABLE));
     }
 
     @Test
     public void testUnstableUnstable() throws Exception {
-        /* worstResult,    bestResult,     buildResult,    expected
-        Unstable         Unstable         Success         false
-        Unstable         Unstable         Unstable        true
-        Unstable         Unstable         Failure         false
-        Unstable         Unstable         Not_built       false
-        Unstable         Unstable         Aborted         false
-        */
-        boolean[] expresults = {
-                false,
-                true,
-                false,
-                false,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.UNSTABLE, Result.UNSTABLE, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(UNSTABLE, UNSTABLE);
+        assertRunResult(condition, SUCCESS, false);
+        assertRunResult(condition, UNSTABLE, true);
+        assertRunResult(condition, FAILURE, false);
+        assertRunResult(condition, NOT_BUILT, false);
+        assertRunResult(condition, ABORTED, false);
     }
 
     @Test
     public void testFailureUnstable() throws Exception {
-        /* worstResult,    bestResult,     buildResult,    expected
-        Failure         Unstable         Success         false
-        Failure         Unstable         Unstable        true
-        Failure         Unstable         Failure         true
-        Failure         Unstable         Not_built       false
-        Failure         Unstable         Aborted         false
-        */
-        boolean[] expresults = {
-                false,
-                true,
-                true,
-                false,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.FAILURE, Result.UNSTABLE, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(FAILURE, UNSTABLE);
+        assertRunResult(condition, SUCCESS, false);
+        assertRunResult(condition, UNSTABLE, true);
+        assertRunResult(condition, FAILURE, true);
+        assertRunResult(condition, NOT_BUILT, false);
+        assertRunResult(condition, ABORTED, false);
     }
 
     @Test
     public void testNotbuiltUnstable() throws Exception {
-        /* worstResult,    bestResult,     buildResult,    expected
-        Not_built         Unstable         Success         false
-        Not_built         Unstable         Unstable        true
-        Not_built         Unstable         Failure         true
-        Not_built         Unstable         Not_built       true
-        Not_built         Unstable         Aborted         false
-        */
-        boolean[] expresults = {
-                false,
-                true,
-                true,
-                true,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.NOT_BUILT, Result.UNSTABLE, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(NOT_BUILT, UNSTABLE);
+        assertRunResult(condition, SUCCESS, false);
+        assertRunResult(condition, UNSTABLE, true);
+        assertRunResult(condition, FAILURE, true);
+        assertRunResult(condition, NOT_BUILT, true);
+        assertRunResult(condition, ABORTED, false);
     }
 
     @Test
     public void testAbortedUnstable() throws Exception {
-        /* worstResult,    bestResult,     buildResult,    expected
-        Aborted         Unstable         Success         false
-        Aborted         Unstable         Unstable        true
-        Aborted         Unstable         Failure         true
-        Aborted         Unstable         Not_built       true
-        Aborted         Unstable         Aborted         true
-        */
-        boolean[] expresults = {
-                false,
-                true,
-                true,
-                true,
-                true};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.ABORTED, Result.UNSTABLE, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(ABORTED, UNSTABLE);
+        assertRunResult(condition, SUCCESS, false);
+        assertRunResult(condition, UNSTABLE, true);
+        assertRunResult(condition, FAILURE, true);
+        assertRunResult(condition, NOT_BUILT, true);
+        assertRunResult(condition, ABORTED, true);
     }
 
     @Test
     public void testSuccessFailure() throws Exception {
-        /* never can be valid as possible statuses not inclusive
-            worstResult,    bestResult,     buildResult,    expected
-        Success         Failure         Success         false
-        Success         Failure         Unstable        false
-        Success         Failure         Failure         false
-        Success         Failure         Not_built       false
-        Success         Failure         Aborted         false
-        */
-        boolean[] expresults = {
-                false,
-                false,
-                false,
-                false,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.SUCCESS, Result.FAILURE, BuildResults[i], expresults[i]);
-        }
+        assertRunPerformAlwaysFalse(new StatusCondition(SUCCESS, FAILURE));
     }
 
     @Test
     public void testUnstableFailure() throws Exception {
-        /* never can be valid as possible statuses not inclusive
-            worstResult,    bestResult,     buildResult,    expected
-        Unstable         Failure         Success         false
-        Unstable         Failure         Unstable        false
-        Unstable         Failure         Failure         false
-        Unstable         Failure         Not_built       false
-        Unstable         Failure         Aborted         false
-        */
-        boolean[] expresults = {
-                false,
-                false,
-                false,
-                false,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.UNSTABLE, Result.FAILURE, BuildResults[i], expresults[i]);
-        }
+        assertRunPerformAlwaysFalse(new StatusCondition(UNSTABLE, FAILURE));
     }
 
     @Test
     public void testFailureFailure() throws Exception {
-        /* worstResult,    bestResult,     buildResult,    expected
-        Failure         Failure         Success         false
-        Failure         Failure         Unstable        false
-        Failure         Failure         Failure         true
-        Failure         Failure         Not_built       false
-        Failure         Failure         Aborted         false
-        */
-        boolean[] expresults = {
-                false,
-                false,
-                true,
-                false,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.FAILURE, Result.FAILURE, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(FAILURE, FAILURE);
+        assertRunResult(condition, SUCCESS, false);
+        assertRunResult(condition, UNSTABLE, false);
+        assertRunResult(condition, FAILURE, true);
+        assertRunResult(condition, NOT_BUILT, false);
+        assertRunResult(condition, ABORTED, false);
     }
 
     @Test
     public void testNotbuiltFailure() throws Exception {
-        /* worstResult,    bestResult,     buildResult,    expected
-        Not_built         Failure         Success         false
-        Not_built         Failure         Unstable        false
-        Not_built         Failure         Failure         true
-        Not_built         Failure         Not_built       true
-        Not_built         Failure         Aborted         false
-        */
-        boolean[] expresults = {
-                false,
-                false,
-                true,
-                true,
-                false};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.NOT_BUILT, Result.FAILURE, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(NOT_BUILT, FAILURE);
+        assertRunResult(condition, SUCCESS, false);
+        assertRunResult(condition, UNSTABLE, false);
+        assertRunResult(condition, FAILURE, true);
+        assertRunResult(condition, NOT_BUILT, true);
+        assertRunResult(condition, ABORTED, false);
     }
 
     @Test
     public void testAbortedFailure() throws Exception {
-        /* worstResult,    bestResult,     buildResult,    expected
-        Aborted         Failure         Success         false
-        Aborted         Failure         Unstable        false
-        Aborted         Failure         Failure         true
-        Aborted         Failure         Not_built       true
-        Aborted         Failure         Aborted         true
-        */
-        boolean[] expresults = {
-                false,
-                false,
-                true,
-                true,
-                true};
-
-        for (int i = 0; i < RESULTCOUNT; i++) {
-            testResultcase(Result.ABORTED, Result.FAILURE, BuildResults[i], expresults[i]);
-        }
+        final StatusCondition condition = new StatusCondition(ABORTED, FAILURE);
+        assertRunResult(condition, SUCCESS, false);
+        assertRunResult(condition, UNSTABLE, false);
+        assertRunResult(condition, FAILURE, true);
+        assertRunResult(condition, NOT_BUILT, true);
+        assertRunResult(condition, ABORTED, true);
     }
 
-    private void testResultcase(Result worstresult, Result bestresult, Result buildresult, boolean expected) throws Exception {
-        assertRunResult(new StatusCondition(worstresult, bestresult), buildresult, expected);
+    private void assertRunPerformAlwaysFalse(final StatusCondition condition) throws Exception {
+        for (Result result : BuildResults)
+            assertRunResult(condition, result, false);
     }
 
-    private void assertRunResult(StatusCondition condition, Result buildResult, boolean expected) throws Exception {
+    private void assertRunResult(final StatusCondition condition, final Result buildResult, final boolean expected) throws Exception {
         reset(build);
         expect(build.getResult()).andReturn(buildResult).anyTimes();
         replay(build);
