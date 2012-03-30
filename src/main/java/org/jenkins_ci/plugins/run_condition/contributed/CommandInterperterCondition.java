@@ -31,14 +31,14 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import java.io.IOException;
 import java.util.Map;
-import org.jenkins_ci.plugins.run_condition.common.PrebuildSameAsPerformRunCondition;
+import org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition;
 
 /**
  * Common part between {@link ShellCondition} and {@link BatchFileCondition }.
  *
  * @author Chris Johnson
  */
-public abstract class CommandInterperterCondition extends PrebuildSameAsPerformRunCondition {
+public abstract class CommandInterperterCondition extends AlwaysPrebuildRunCondition {
     /**
      * Command to execute. The format depends on the actual {@link CommandInterpreter} implementation.
      */
@@ -53,7 +53,7 @@ public abstract class CommandInterperterCondition extends PrebuildSameAsPerformR
     }
 
     @Override
-    public boolean runBuildStep(AbstractBuild<?, ?> build, BuildListener listener) throws InterruptedException {
+    public boolean runPerform(AbstractBuild<?, ?> build, BuildListener listener) throws InterruptedException {
         FilePath ws = build.getWorkspace();
         FilePath script = null;
 
