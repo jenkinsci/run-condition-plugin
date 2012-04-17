@@ -1,0 +1,19 @@
+<div>
+    The cause why the build was triggered. The following causes are supported:
+    <ul>
+        <li>UserCause - the build was triggered by a manual interaction</li>
+        <li>SCMTrigger - the build was triggered by a SCM change</li>
+        <li>TimerTrigger - the build was triggered by a timer</li>
+        <li>CLICause - the build was triggered by via CLI interface</li>
+        <li>RemoteCause - the build was triggered via remote interface</li>
+        <li>UpstreamCause - the build was triggered by an upstream project</li>
+    </ul>
+    The following causes are supported if the XTrigger plugin is installed:
+    <ul>
+        <li>FSTrigger - the build was triggered by a file system change (FSTrigger Plugin)</li>
+        <li>URLTrigger - the build was triggered by a URL change (URLTrigger Plugin)</li>
+        <li>IvyTrigger - the build was triggered by an Ivy dependency version has change (IvyTrigger Plugin)</li>
+        <li>ScriptTrigger - the build was triggered by a script (ScriptTrigger Plugin)</li>
+        <li>BuildResultTrigger - the build was triggered by a result of an other job (BuildResultTrigger Plugin)</li>
+    </ul>
+</div>
