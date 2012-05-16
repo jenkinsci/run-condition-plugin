@@ -46,19 +46,27 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
     private enum BuildCause {
 
-        USER_CAUSE(UserCause.class, "UserCause"), CLI_CAUSE(CLICause.class, "CLICause"), REMOTE_CAUSE(RemoteCause.class, "RemoteCause"), SCM_CAUSE(
-                SCMTriggerCause.class, "SCMTrigger"), TIMER_CAUSE(TimerTriggerCause.class, "TimerTrigger"), UPSTREAM_CAUSE(UpstreamCause.class, "UpstreamCause"),
+        USER_CAUSE(UserCause.class, "UserCause (upto Jenkins 1.427)"),
+        // if jenkins is greater than 1.427 we need UserIdCause, use string constructor so to keep 1.409 min required.
+        USERID_CAUSE("hudson.model.Cause$UserIdCause", "UserIdCause (Jenkins 1.428 onwards)"),
+        CLI_CAUSE(CLICause.class, "CLICause"),
+        REMOTE_CAUSE(RemoteCause.class, "RemoteCause"),
+        SCM_CAUSE(SCMTriggerCause.class, "SCMTrigger"),
+        TIMER_CAUSE(TimerTriggerCause.class, "TimerTrigger"),
+        UPSTREAM_CAUSE(UpstreamCause.class, "UpstreamCause"),
         // if XTrigger plugin is installed:
-        FS_CAUSE("org.jenkinsci.plugins.fstrigger.FSTriggerCause", "FSTrigger"), URL_CAUSE("org.jenkinsci.plugins.urltrigger.URLTriggerCause", "URLTrigger"), IVY_CAUSE(
-                "org.jenkinsci.plugins.ivytrigger.IvyTriggerCause", "IvyTrigger"), SCRIPT_CAUSE("org.jenkinsci.plugins.scripttrigger.ScriptTriggerCause",
-                "ScriptTrigger"), BUILDRESULT_CAUSE("org.jenkinsci.plugins.buildresulttrigger.BuildResultTriggerCause", "BuildResultTrigger");
+        FS_CAUSE("org.jenkinsci.plugins.fstrigger.FSTriggerCause", "FSTrigger"),
+        URL_CAUSE("org.jenkinsci.plugins.urltrigger.URLTriggerCause", "URLTrigger"),
+        IVY_CAUSE("org.jenkinsci.plugins.ivytrigger.IvyTriggerCause", "IvyTrigger"),
+        SCRIPT_CAUSE("org.jenkinsci.plugins.scripttrigger.ScriptTriggerCause","ScriptTrigger"),
+        BUILDRESULT_CAUSE("org.jenkinsci.plugins.buildresulttrigger.BuildResultTriggerCause", "BuildResultTrigger");
 
         public final String causeClassName;
         public final String displayName;
 
         /**
          * Constructor to build causes the cause class is NOT available at build time.
-         * 
+         *
          * @param causeClassName
          * @param displayName
          */
@@ -69,7 +77,7 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
         /**
          * Constructor to build causes the cause class is available at build time.
-         * 
+         *
          * @param clazz
          *            cause class
          * @param displayName
