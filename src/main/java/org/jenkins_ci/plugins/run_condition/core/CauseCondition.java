@@ -46,19 +46,34 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
     private enum BuildCause {
 
-        USER_CAUSE(UserCause.class, "UserCause (upto Jenkins 1.427)"),
-        // if jenkins is greater than 1.427 we need UserIdCause, use string constructor so to keep 1.409 min required.
-        USERID_CAUSE("hudson.model.Cause$UserIdCause", "UserIdCause (Jenkins 1.428 onwards)"),
+        USER_CAUSE(UserCause.class, "UserCause") {
+            @Override
+            public boolean isCausedBy(String className) {
+                // if jenkins is greater than 1.427 we need UserIdCause
+                return this.causeClassName.equals(className) || "hudson.model.Cause$UserIdCause".equals(className);
+            }
+        },
+        // triggered by command line
         CLI_CAUSE(CLICause.class, "CLICause"),
+        // remote call
         REMOTE_CAUSE(RemoteCause.class, "RemoteCause"),
+        // change on scm
         SCM_CAUSE(SCMTriggerCause.class, "SCMTrigger"),
+        // timer launched job
         TIMER_CAUSE(TimerTriggerCause.class, "TimerTrigger"),
+        // upstream job has triggered
         UPSTREAM_CAUSE(UpstreamCause.class, "UpstreamCause"),
+
         // if XTrigger plugin is installed:
+        // file change
         FS_CAUSE("org.jenkinsci.plugins.fstrigger.FSTriggerCause", "FSTrigger"),
+        // url change
         URL_CAUSE("org.jenkinsci.plugins.urltrigger.URLTriggerCause", "URLTrigger"),
+        // ivy is calling
         IVY_CAUSE("org.jenkinsci.plugins.ivytrigger.IvyTriggerCause", "IvyTrigger"),
-        SCRIPT_CAUSE("org.jenkinsci.plugins.scripttrigger.ScriptTriggerCause","ScriptTrigger"),
+        // a user script
+        SCRIPT_CAUSE("org.jenkinsci.plugins.scripttrigger.ScriptTriggerCause", "ScriptTrigger"),
+        // a specific build result
         BUILDRESULT_CAUSE("org.jenkinsci.plugins.buildresulttrigger.BuildResultTriggerCause", "BuildResultTrigger");
 
         public final String causeClassName;
@@ -66,7 +81,7 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
         /**
          * Constructor to build causes the cause class is NOT available at build time.
-         *
+         * 
          * @param causeClassName
          * @param displayName
          */
@@ -76,8 +91,18 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
         }
 
         /**
+         * allow enum definition to overwrite
+         * 
+         * @param className
+         * @return true if this cause is meant by the given className
+         */
+        boolean isCausedBy(String className) {
+            return this.causeClassName.equals(className);
+        }
+
+        /**
          * Constructor to build causes the cause class is available at build time.
-         *
+         * 
          * @param clazz
          *            cause class
          * @param displayName
@@ -109,12 +134,14 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
         final List<Cause> causes = build.getCauses();
-        if (isExclusiveCause()) {
-            return causes.size() == 1 && buildCause.causeClassName.equals(causes.get(0).getClass().getName());
-        } else {
-            for (Cause cause : causes) {
-                if (cause.getClass().getName().equals(buildCause.causeClassName)) {
-                    return true;
+        if (buildCause != null) {
+            if (isExclusiveCause()) {
+                return causes.size() == 1 && buildCause.isCausedBy(causes.get(0).getClass().getName());
+            } else {
+                for (Cause cause : causes) {
+                    if (buildCause.isCausedBy(cause.getClass().getName())) {
+                        return true;
+                    }
                 }
             }
         }
