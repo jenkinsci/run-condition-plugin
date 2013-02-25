@@ -53,6 +53,8 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
                 return this.causeClassName.equals(className) || "hudson.model.Cause$UserIdCause".equals(className);
             }
         },
+        // triggered by the m2release-plugin
+        M2_RELEASE_CAUSE("org.jvnet.hudson.plugins.m2release.ReleaseCause", "M2ReleaseCause"),
         // triggered by command line
         CLI_CAUSE(CLICause.class, "CLICause"),
         // remote call
