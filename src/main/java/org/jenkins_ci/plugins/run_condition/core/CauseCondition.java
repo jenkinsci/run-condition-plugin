@@ -74,7 +74,9 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
         // a user script
         SCRIPT_CAUSE("org.jenkinsci.plugins.scripttrigger.ScriptTriggerCause", "ScriptTrigger"),
         // a specific build result
-        BUILDRESULT_CAUSE("org.jenkinsci.plugins.buildresulttrigger.BuildResultTriggerCause", "BuildResultTrigger");
+        BUILDRESULT_CAUSE("org.jenkinsci.plugins.buildresulttrigger.BuildResultTriggerCause", "BuildResultTrigger"),
+        // a NuGet dependency
+        NUGET_CAUSE("org.jenkinsci.plugins.nuget.NugetCause", "NugetTrigger");
 
         public final String causeClassName;
         public final String displayName;
