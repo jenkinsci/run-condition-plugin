@@ -24,8 +24,10 @@
 
 package org.jenkins_ci.plugins.run_condition.core;
 
+import hudson.AbortException;
 import hudson.Extension;
 import hudson.cli.BuildCommand.CLICause;
+import hudson.model.Build;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.Cause;
@@ -36,6 +38,7 @@ import hudson.triggers.SCMTrigger.SCMTriggerCause;
 import hudson.triggers.TimerTrigger.TimerTriggerCause;
 import hudson.util.ListBoxModel;
 
+import java.lang.reflect.Method;
 import java.util.List;
 
 import org.jenkins_ci.plugins.run_condition.Messages;
@@ -48,7 +51,8 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
         USER_CAUSE(UserCause.class, "UserCause") {
             @Override
-            public boolean isCausedBy(String className) {
+            public boolean isCausedBy(Cause cause) {
+                String className = cause.getClass().getName();
                 // if jenkins is greater than 1.427 we need UserIdCause
                 return this.causeClassName.equals(className) || "hudson.model.Cause$UserIdCause".equals(className);
             }
@@ -68,15 +72,40 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
         // if XTrigger plugin is installed:
         // file change
-        FS_CAUSE("org.jenkinsci.plugins.fstrigger.FSTriggerCause", "FSTrigger"),
+        FS_CAUSE("org.jenkinsci.lib.xtrigger.XTriggerCause", "FSTrigger") {
+            @Override
+            public boolean isCausedBy(Cause cause) {
+                return isCauseByForXTrigger(this, cause);
+            }
+        },
         // url change
-        URL_CAUSE("org.jenkinsci.plugins.urltrigger.URLTriggerCause", "URLTrigger"),
+        URL_CAUSE("org.jenkinsci.lib.xtrigger.XTriggerCause", "URLTrigger") {
+            @Override
+            public boolean isCausedBy(Cause cause) {
+                return isCauseByForXTrigger(this, cause);
+            }
+        },
         // ivy is calling
-        IVY_CAUSE("org.jenkinsci.plugins.ivytrigger.IvyTriggerCause", "IvyTrigger"),
+        IVY_CAUSE("org.jenkinsci.lib.xtrigger.XTriggerCause", "IvyTrigger") {
+            @Override
+            public boolean isCausedBy(Cause cause) {
+                return isCauseByForXTrigger(this, cause);
+            }
+        },
         // a user script
-        SCRIPT_CAUSE("org.jenkinsci.plugins.scripttrigger.ScriptTriggerCause", "ScriptTrigger"),
+        SCRIPT_CAUSE("org.jenkinsci.lib.xtrigger.XTriggerCause", "ScriptTrigger") {
+            @Override
+            public boolean isCausedBy(Cause cause) {
+                return isCauseByForXTrigger(this, cause);
+            }
+        },
         // a specific build result
-        BUILDRESULT_CAUSE("org.jenkinsci.plugins.buildresulttrigger.BuildResultTriggerCause", "BuildResultTrigger");
+        BUILDRESULT_CAUSE("org.jenkinsci.lib.xtrigger.XTriggerCause", "BuildResultTrigger") {
+            @Override
+            public boolean isCausedBy(Cause cause) {
+                return isCauseByForXTrigger(this, cause);
+            }
+        };
 
         public final String causeClassName;
         public final String displayName;
@@ -95,11 +124,21 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
         /**
          * allow enum definition to overwrite
          *
-         * @param className
+         * @param cause
          * @return true if this cause is meant by the given className
          */
-        boolean isCausedBy(String className) {
-            return this.causeClassName.equals(className);
+        boolean isCausedBy(Cause cause) {
+            return this.causeClassName.equals(cause.getClass().getName());
+        }
+
+        private static boolean isCauseByForXTrigger(BuildCause buildCause, Cause cause) {
+            try {
+                Method method = cause.getClass().getDeclaredMethod("getTriggerName");
+                String triggerName = (String) method.invoke(cause);
+                return buildCause.displayName.equals(triggerName);
+            } catch(ReflectiveOperationException e) {
+                return false;
+            }
         }
 
         /**
@@ -141,10 +180,10 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
         final List<Cause> causes = build.getRootBuild().getCauses();
         if (buildCause != null) {
             if (isExclusiveCause()) {
-                return causes.size() == 1 && buildCause.isCausedBy(causes.get(0).getClass().getName());
+                return causes.size() == 1 && buildCause.isCausedBy(causes.get(0));
             } else {
                 for (Cause cause : causes) {
-                    if (buildCause.isCausedBy(cause.getClass().getName())) {
+                    if (buildCause.isCausedBy(cause)) {
                         return true;
                     }
                 }
