@@ -40,6 +40,7 @@ import java.util.List;
 
 import org.jenkins_ci.plugins.run_condition.Messages;
 import org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition;
+import org.jenkinsci.lib.xtrigger.XTriggerCause;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 public final class CauseCondition extends AlwaysPrebuildRunCondition {
@@ -48,7 +49,8 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
         USER_CAUSE(UserCause.class, "UserCause") {
             @Override
-            public boolean isCausedBy(String className) {
+            public boolean isCausedBy(Cause cause) {
+                String className = cause.getClass().getName();
                 // if jenkins is greater than 1.427 we need UserIdCause
                 return this.causeClassName.equals(className) || "hudson.model.Cause$UserIdCause".equals(className);
             }
@@ -66,17 +68,17 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
         // if XTrigger plugin is installed:
         // file change
-        FS_CAUSE("org.jenkinsci.plugins.fstrigger.FSTriggerCause", "FSTrigger"),
+        FS_CAUSE(XTriggerCause.class, "FSTrigger"),
         // url change
-        URL_CAUSE("org.jenkinsci.plugins.urltrigger.URLTriggerCause", "URLTrigger"),
+        URL_CAUSE(XTriggerCause.class, "URLTrigger"),
         // ivy is calling
-        IVY_CAUSE("org.jenkinsci.plugins.ivytrigger.IvyTriggerCause", "IvyTrigger"),
+        IVY_CAUSE(XTriggerCause.class, "IvyTrigger"),
         // a user script
-        SCRIPT_CAUSE("org.jenkinsci.plugins.scripttrigger.ScriptTriggerCause", "ScriptTrigger"),
+        SCRIPT_CAUSE(XTriggerCause.class, "ScriptTrigger"),
         // a specific build result
-        BUILDRESULT_CAUSE("org.jenkinsci.plugins.buildresulttrigger.BuildResultTriggerCause", "BuildResultTrigger"),
+        BUILDRESULT_CAUSE(XTriggerCause.class, "BuildResultTrigger"),
         // a NuGet dependency
-        NUGET_CAUSE("org.jenkinsci.plugins.nuget.NugetCause", "NugetTrigger");
+        NUGET_CAUSE(XTriggerCause.class, "NuGet");
 
         public final String causeClassName;
         public final String displayName;
@@ -98,8 +100,10 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
          * @param className
          * @return true if this cause is meant by the given className
          */
-        boolean isCausedBy(String className) {
-            return this.causeClassName.equals(className);
+        boolean isCausedBy(Cause cause) {
+            return cause.getClass().equals(XTriggerCause.class) ?
+                    this.displayName.equals(((XTriggerCause)cause).getTriggerName()) :
+                    this.causeClassName.equals(cause.getClass().getName());
         }
 
         /**
@@ -138,10 +142,10 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
         final List<Cause> causes = build.getCauses();
         if (buildCause != null) {
             if (isExclusiveCause()) {
-                return causes.size() == 1 && buildCause.isCausedBy(causes.get(0).getClass().getName());
+                return causes.size() == 1 && buildCause.isCausedBy(causes.get(0));
             } else {
                 for (Cause cause : causes) {
-                    if (buildCause.isCausedBy(cause.getClass().getName())) {
+                    if (buildCause.isCausedBy(cause)) {
                         return true;
                     }
                 }

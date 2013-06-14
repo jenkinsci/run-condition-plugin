@@ -71,6 +71,11 @@
             <version>3.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.lib</groupId>
+            <artifactId>xtrigger-lib</artifactId>
+            <version>0.24</version>
+        </dependency>
     </dependencies>
 
     <scm>
