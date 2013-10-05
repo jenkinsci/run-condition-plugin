@@ -61,6 +61,7 @@ public final class FileExistsCondition extends AlwaysPrebuildRunCondition {
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
         final String expandedFile = TokenMacro.expandAll(build, listener, file);
+        listener.getLogger().println(Messages.fileExistsCondition_check(expandedFile));
         return baseDir.getBaseDirectory(build).child(expandedFile).exists();
     }
 

@@ -71,6 +71,7 @@ public final class StatusCondition extends AlwaysPrebuildRunCondition {
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
         final Result currentStatus = build.getResult() == null ? Result.SUCCESS : build.getResult();
+        listener.getLogger().println(Messages.statusCondition_check(currentStatus, worstResult, bestResult));
         return worstResult.isWorseOrEqualTo(currentStatus) && bestResult.isBetterOrEqualTo(currentStatus);
     }
 
