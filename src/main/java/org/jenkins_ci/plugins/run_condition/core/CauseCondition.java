@@ -81,7 +81,7 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
         /**
          * Constructor to build causes the cause class is NOT available at build time.
-         * 
+         *
          * @param causeClassName
          * @param displayName
          */
@@ -92,7 +92,7 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
         /**
          * allow enum definition to overwrite
-         * 
+         *
          * @param className
          * @return true if this cause is meant by the given className
          */
@@ -102,7 +102,7 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
 
         /**
          * Constructor to build causes the cause class is available at build time.
-         * 
+         *
          * @param clazz
          *            cause class
          * @param displayName
@@ -135,7 +135,8 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
         final String name = buildCause == null ? "N/A" : buildCause.displayName;
         listener.getLogger().println(Messages.causeCondition_check(name));
-        final List<Cause> causes = build.getCauses();
+//        final List<Cause> causes = build.getCauses();
+        final List<Cause> causes = build.getRootBuild().getCauses();
         if (buildCause != null) {
             if (isExclusiveCause()) {
                 return causes.size() == 1 && buildCause.isCausedBy(causes.get(0).getClass().getName());
