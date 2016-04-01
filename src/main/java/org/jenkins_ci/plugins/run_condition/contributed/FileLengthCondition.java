@@ -48,15 +48,13 @@ import hudson.util.ListBoxModel;
 public class FileLengthCondition extends AlwaysPrebuildRunCondition {
 
 	@Extension
-	public static class FileLengthConditionDescriptor
-			extends RunConditionDescriptor {
+	public static class FileLengthConditionDescriptor extends RunConditionDescriptor {
 
 		/**
 		 * Validates the <code>file</code> field.
 		 * 
-		 * @return <code>FormValidation.ok()</code> if validation is successful;
-		 *         <code>FormValidation.error()</code> with an error message
-		 *         otherwise.
+		 * @return <code>FormValidation.ok()</code> if validation is successful; <code>FormValidation.error()</code>
+		 *         with an error message otherwise.
 		 */
 		public FormValidation doCheckFile(@QueryParameter String value) {
 			return FormValidation.validateRequired(value);
@@ -65,9 +63,8 @@ public class FileLengthCondition extends AlwaysPrebuildRunCondition {
 		/**
 		 * Validates the <code>length</code> field.
 		 * 
-		 * @return <code>FormValidation.ok()</code> if validation is successful;
-		 *         <code>FormValidation.error()</code> with an error message
-		 *         otherwise.
+		 * @return <code>FormValidation.ok()</code> if validation is successful; <code>FormValidation.error()</code>
+		 *         with an error message otherwise.
 		 */
 		public FormValidation doCheckLength(@QueryParameter String value) {
 			boolean ok;
@@ -77,17 +74,13 @@ public class FileLengthCondition extends AlwaysPrebuildRunCondition {
 			} catch (NumberFormatException e) {
 				ok = false;
 			}
-			return ok ? FormValidation.ok()
-					: FormValidation.error(Messages
-							.FileLengthCondition_doCheckLength_errMsg());
+			return ok ? FormValidation.ok() : FormValidation.error(Messages.FileLengthCondition_doCheckLength_errMsg());
 		}
 
 		/**
-		 * Returns the <code>ListBoxModel</code> object containing drop-down
-		 * options for the <code>when</code> field.
+		 * Returns the <code>ListBoxModel</code> object containing drop-down options for the <code>when</code> field.
 		 * 
-		 * @return The <code>ListBoxModel</code> object containing drop-down
-		 *         options for the <code>when</code> field.
+		 * @return The <code>ListBoxModel</code> object containing drop-down options for the <code>when</code> field.
 		 */
 		public ListBoxModel doFillWhenItems() {
 			ListBoxModel lbm = new ListBoxModel();
@@ -104,8 +97,7 @@ public class FileLengthCondition extends AlwaysPrebuildRunCondition {
 		 */
 		public List<? extends Descriptor<? extends BaseDirectory>> getBaseDirectories() {
 			return Hudson.getInstance().<BaseDirectory, BaseDirectory
-					.BaseDirectoryDescriptor> getDescriptorList(
-							BaseDirectory.class);
+					.BaseDirectoryDescriptor> getDescriptorList(BaseDirectory.class);
 		}
 
 		/*
@@ -153,8 +145,7 @@ public class FileLengthCondition extends AlwaysPrebuildRunCondition {
 	 *            The comparison type.
 	 */
 	@DataBoundConstructor
-	public FileLengthCondition(BaseDirectory baseDir, String file,
-			String length, String when) {
+	public FileLengthCondition(BaseDirectory baseDir, String file, String length, String when) {
 		this.baseDir = baseDir;
 		this.file = file;
 		this.length = length;
@@ -200,19 +191,15 @@ public class FileLengthCondition extends AlwaysPrebuildRunCondition {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jenkins_ci.plugins.run_condition.RunCondition#runPerform(hudson.model
-	 * .AbstractBuild, hudson.model.BuildListener)
+	 * @see org.jenkins_ci.plugins.run_condition.RunCondition#runPerform(hudson.model .AbstractBuild,
+	 * hudson.model.BuildListener)
 	 */
 	@Override
-	public boolean runPerform(AbstractBuild<?, ?> build, BuildListener listener)
-			throws Exception {
+	public boolean runPerform(AbstractBuild<?, ?> build, BuildListener listener) throws Exception {
 		String expandedFile = TokenMacro.expandAll(build, listener, file);
-		listener.getLogger().println(Messages.FileLengthCondition_console_args(
-				baseDir, expandedFile, length, when));
+		listener.getLogger().println(Messages.FileLengthCondition_console_args(baseDir, expandedFile, length, when));
 		// Let exception be thrown when file does not exist
-		long fileLength = baseDir.getBaseDirectory(build).child(expandedFile)
-				.length();
+		long fileLength = baseDir.getBaseDirectory(build).child(expandedFile).length();
 		long lengthValue = Long.valueOf(length);
 		for (When whenEnumValue : When.values()) {
 			if (whenEnumValue.getName().equals(when)) {

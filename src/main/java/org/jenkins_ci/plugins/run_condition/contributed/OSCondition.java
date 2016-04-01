@@ -72,8 +72,7 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 	public static class OSConditionDescriptor extends RunConditionDescriptor {
 
 		/**
-		 * The prefix of the names of the constants for OS family in the Ant
-		 * <code>Os</code> class.
+		 * The prefix of the names of the constants for OS family in the Ant <code>Os</code> class.
 		 */
 		public static final String FAMILY_CONST_PREFIX = "FAMILY_";
 
@@ -88,29 +87,23 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 		 *            The value of the architecture field.
 		 * @param version
 		 *            The value of the version field.
-		 * @return <code>FormValidation.ok()</code> if validation is successful;
-		 *         <code>FormValidation.error()</code> with an error message
-		 *         otherwise.
+		 * @return <code>FormValidation.ok()</code> if validation is successful; <code>FormValidation.error()</code>
+		 *         with an error message otherwise.
 		 */
-		public FormValidation doCheckFamily(@QueryParameter String value,
-				@QueryParameter String name, @QueryParameter String arch,
-				@QueryParameter String version) {
+		public FormValidation doCheckFamily(@QueryParameter String value, @QueryParameter String name,
+				@QueryParameter String arch, @QueryParameter String version) {
 			// Empty fields are not passed in as null values but empty strings
 			// from Jenkins
-			if (value.length() == 0 && name.length() == 0 && arch.length() == 0
-					&& version.length() == 0) {
-				return FormValidation
-						.error(Messages.OSCondition_doCheckFamily_errMsg());
+			if (value.length() == 0 && name.length() == 0 && arch.length() == 0 && version.length() == 0) {
+				return FormValidation.error(Messages.OSCondition_doCheckFamily_errMsg());
 			}
 			return FormValidation.ok();
 		}
 
 		/**
-		 * Returns the <code>ListBoxModel</code> object containing drop-down
-		 * options for the <code>family</code> field.
+		 * Returns the <code>ListBoxModel</code> object containing drop-down options for the <code>family</code> field.
 		 * 
-		 * @return The <code>ListBoxModel</code> object containing drop-down
-		 *         options for the <code>family</code> field.
+		 * @return The <code>ListBoxModel</code> object containing drop-down options for the <code>family</code> field.
 		 * @throws IllegalAccessException
 		 */
 		public ListBoxModel doFillFamilyItems() throws IllegalAccessException {
@@ -125,10 +118,8 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 			Set<String> familyOptions = new TreeSet<String>();
 			Field[] fields = this.clazz.getDeclaredFields();
 			for (Field field : fields) {
-				if (Modifier.isPublic(field.getModifiers())
-						&& Modifier.isStatic(field.getModifiers())
-						&& field.getType().equals(String.class)
-						&& field.getName().startsWith(FAMILY_CONST_PREFIX)) {
+				if (Modifier.isPublic(field.getModifiers()) && Modifier.isStatic(field.getModifiers())
+						&& field.getType().equals(String.class) && field.getName().startsWith(FAMILY_CONST_PREFIX)) {
 					familyOptions.add((String) field.get(String.class));
 				}
 			}
@@ -151,9 +142,8 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 	}
 
 	/*
-	 * This constants are copied from Apache Ant 1.9.4's
-	 * <code>org.apache.tools.ant.taskdefs.condition.Os</code> class and adapted
-	 * for use in this Jenkins run condition.
+	 * This constants are copied from Apache Ant 1.9.4's <code>org.apache.tools.ant.taskdefs.condition.Os</code> class
+	 * and adapted for use in this Jenkins run condition.
 	 */
 
 	private static final String DARWIN = "darwin";
@@ -203,8 +193,7 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 	final String version;
 
 	@DataBoundConstructor
-	public OSCondition(String family, String name, String arch,
-			String version) {
+	public OSCondition(String family, String name, String arch, String version) {
 		this.family = family;
 		this.name = name;
 		this.arch = arch;
@@ -248,28 +237,24 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 	}
 
 	/**
-	 * This method is copied from Apache Ant 1.9.4's
-	 * <code>org.apache.tools.ant.taskdefs.condition.Os</code> class and adapted
-	 * for use in this Jenkins run condition. Determines if the OS on which Ant
-	 * is executing matches the given OS family.
+	 * This method is copied from Apache Ant 1.9.4's <code>org.apache.tools.ant.taskdefs.condition.Os</code> class and
+	 * adapted for use in this Jenkins run condition. Determines if the OS on which Ant is executing matches the given
+	 * OS family.
 	 * 
 	 * @param family
 	 *            The OS family.
-	 * @return <code>true</code> if the OS matches; <code>false</code>
-	 *         otherwise.
+	 * @return <code>true</code> if the OS matches; <code>false</code> otherwise.
 	 * @throws InterruptedException
 	 * @throws IOException
 	 */
-	private boolean isFamily(String family)
-			throws IOException, InterruptedException {
+	private boolean isFamily(String family) throws IOException, InterruptedException {
 		return isOs(family, null, null, null);
 	}
 
 	/**
-	 * This method is copied from Apache Ant 1.9.4's
-	 * <code>org.apache.tools.ant.taskdefs.condition.Os</code> class and adapted
-	 * for use in this Jenkins run condition. Determines if the OS on which Ant
-	 * is executing matches the given OS family, name, architecture and version.
+	 * This method is copied from Apache Ant 1.9.4's <code>org.apache.tools.ant.taskdefs.condition.Os</code> class and
+	 * adapted for use in this Jenkins run condition. Determines if the OS on which Ant is executing matches the given
+	 * OS family, name, architecture and version.
 	 * 
 	 * @param family
 	 *            The OS family.
@@ -279,23 +264,19 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 	 *            The OS architecture.
 	 * @param version
 	 *            The OS version.
-	 * @return <code>true</code> if the OS matches; <code>false</code>
-	 *         otherwise.
+	 * @return <code>true</code> if the OS matches; <code>false</code> otherwise.
 	 * @throws InterruptedException
 	 * @throws IOException
 	 */
-	private boolean isOs(String family, String name, String arch,
-			String version) throws IOException, InterruptedException {
+	private boolean isOs(String family, String name, String arch, String version)
+			throws IOException, InterruptedException {
 		// Obtain the required JVM system properties from the Computer that is
 		// currently running the build
 		Computer computer = Computer.currentComputer();
 		Map<Object, Object> sysProps = computer.getSystemProperties();
-		String sysPropOsName = ((String) sysProps.get("os.name"))
-				.toLowerCase(Locale.ENGLISH);
-		String sysPropOsArch = ((String) sysProps.get("os.arch"))
-				.toLowerCase(Locale.ENGLISH);
-		String sysPropOsVersion = ((String) sysProps.get("os.version"))
-				.toLowerCase(Locale.ENGLISH);
+		String sysPropOsName = ((String) sysProps.get("os.name")).toLowerCase(Locale.ENGLISH);
+		String sysPropOsArch = ((String) sysProps.get("os.arch")).toLowerCase(Locale.ENGLISH);
+		String sysPropOsVersion = ((String) sysProps.get("os.version")).toLowerCase(Locale.ENGLISH);
 		String sysPropPathSep = (String) sysProps.get("path.separator");
 
 		boolean retValue = false;
@@ -316,8 +297,7 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 				boolean isNT = false;
 				if (isWindows) {
 					// there are only four 9x platforms that we look for
-					is9x = (sysPropOsName.indexOf("95") >= 0
-							|| sysPropOsName.indexOf("98") >= 0
+					is9x = (sysPropOsName.indexOf("95") >= 0 || sysPropOsName.indexOf("98") >= 0
 							|| sysPropOsName.indexOf("me") >= 0
 							// wince isn't really 9x, but crippled enough to
 							// be a muchness. Ant doesn't run on CE, anyway.
@@ -335,22 +315,16 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 				} else if (family.equals(FAMILY_NETWARE)) {
 					isFamily = sysPropOsName.indexOf(FAMILY_NETWARE) > -1;
 				} else if (family.equals(FAMILY_DOS)) {
-					isFamily = sysPropPathSep.equals(";")
-							&& !isFamily(FAMILY_NETWARE);
+					isFamily = sysPropPathSep.equals(";") && !isFamily(FAMILY_NETWARE);
 				} else if (family.equals(FAMILY_MAC)) {
-					isFamily = sysPropOsName.indexOf(FAMILY_MAC) > -1
-							|| sysPropOsName.indexOf("dawrin") > -1;
+					isFamily = sysPropOsName.indexOf(FAMILY_MAC) > -1 || sysPropOsName.indexOf("dawrin") > -1;
 				} else if (family.equals(FAMILY_TANDEM)) {
 					isFamily = sysPropOsName.indexOf("nonstop_kernel") > -1;
 				} else if (family.equals(FAMILY_UNIX)) {
-					isFamily = sysPropPathSep.equals(":")
-							&& !isFamily(FAMILY_VMS)
-							&& (!isFamily(FAMILY_MAC)
-									|| sysPropOsName.endsWith("x")
-									|| sysPropOsName.indexOf("dawrin") > -1);
+					isFamily = sysPropPathSep.equals(":") && !isFamily(FAMILY_VMS) && (!isFamily(FAMILY_MAC)
+							|| sysPropOsName.endsWith("x") || sysPropOsName.indexOf("dawrin") > -1);
 				} else if (family.equals(FAMILY_ZOS)) {
-					isFamily = sysPropOsName.indexOf(FAMILY_ZOS) > -1
-							|| sysPropOsName.indexOf("os/390") > -1;
+					isFamily = sysPropOsName.indexOf(FAMILY_ZOS) > -1 || sysPropOsName.indexOf("os/390") > -1;
 				} else if (family.equals(FAMILY_OS400)) {
 					isFamily = sysPropOsName.indexOf(FAMILY_OS400) > -1;
 				} else if (family.equals(FAMILY_VMS)) {
@@ -359,9 +333,7 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 					// Comment out this throw statement and return false instead
 					// in the run condition
 					/*
-					 * throw new BuildException(
-					 * "Don\'t know how to detect os family \"" + family +
-					 * "\"");
+					 * throw new BuildException( "Don\'t know how to detect os family \"" + family + "\"");
 					 */
 					return false;
 				}
@@ -383,22 +355,17 @@ public class OSCondition extends AlwaysPrebuildRunCondition {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jenkins_ci.plugins.run_condition.RunCondition#runPerform(hudson.model
-	 * .AbstractBuild, hudson.model.BuildListener)
+	 * @see org.jenkins_ci.plugins.run_condition.RunCondition#runPerform(hudson.model .AbstractBuild,
+	 * hudson.model.BuildListener)
 	 */
 	@Override
-	public boolean runPerform(AbstractBuild<?, ?> build, BuildListener listener)
-			throws Exception {
+	public boolean runPerform(AbstractBuild<?, ?> build, BuildListener listener) throws Exception {
 		// Treat empty values as null
-		String expandedName = (name.length() == 0) ? null
-				: TokenMacro.expandAll(build, listener, name);
-		String expandedArch = (arch.length() == 0) ? null
-				: TokenMacro.expandAll(build, listener, arch);
-		String expandedVersion = (version.length() == 0) ? null
-				: TokenMacro.expandAll(build, listener, version);
-		listener.getLogger().println(Messages.OSCondition_console_args(family,
-				expandedName, expandedArch, expandedVersion));
+		String expandedName = (name.length() == 0) ? null : TokenMacro.expandAll(build, listener, name);
+		String expandedArch = (arch.length() == 0) ? null : TokenMacro.expandAll(build, listener, arch);
+		String expandedVersion = (version.length() == 0) ? null : TokenMacro.expandAll(build, listener, version);
+		listener.getLogger()
+				.println(Messages.OSCondition_console_args(family, expandedName, expandedArch, expandedVersion));
 		return isOs(family, expandedName, expandedArch, expandedVersion);
 	}
 

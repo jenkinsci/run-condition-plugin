@@ -41,8 +41,7 @@ import hudson.model.BuildListener;
 public class ContainsCondition extends AlwaysPrebuildRunCondition {
 
 	@Extension
-	public static class ContainsConditionDescriptor
-			extends RunConditionDescriptor {
+	public static class ContainsConditionDescriptor extends RunConditionDescriptor {
 
 		/*
 		 * (non-Javadoc)
@@ -72,8 +71,7 @@ public class ContainsCondition extends AlwaysPrebuildRunCondition {
 	final String substring;
 
 	@DataBoundConstructor
-	public ContainsCondition(String string, String substring,
-			boolean caseSensitive) {
+	public ContainsCondition(String string, String substring, boolean caseSensitive) {
 		this.string = string;
 		this.substring = substring;
 		this.caseSensitive = caseSensitive;
@@ -100,8 +98,7 @@ public class ContainsCondition extends AlwaysPrebuildRunCondition {
 	/**
 	 * Returns whether a case-sensitive comparison should be performed.
 	 * 
-	 * @return <code>true</code> if a case-sensitive comparison should be
-	 *         performed; <code>false</code> otherwise.
+	 * @return <code>true</code> if a case-sensitive comparison should be performed; <code>false</code> otherwise.
 	 */
 	public boolean isCaseSensitive() {
 		return caseSensitive;
@@ -110,21 +107,16 @@ public class ContainsCondition extends AlwaysPrebuildRunCondition {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jenkins_ci.plugins.run_condition.RunCondition#runPerform(hudson.model
-	 * .AbstractBuild, hudson.model.BuildListener)
+	 * @see org.jenkins_ci.plugins.run_condition.RunCondition#runPerform(hudson.model .AbstractBuild,
+	 * hudson.model.BuildListener)
 	 */
 	@Override
-	public boolean runPerform(AbstractBuild<?, ?> build, BuildListener listener)
-			throws Exception {
+	public boolean runPerform(AbstractBuild<?, ?> build, BuildListener listener) throws Exception {
 		String expandedString = TokenMacro.expandAll(build, listener, string);
-		String expandedSubstring = TokenMacro.expandAll(build, listener,
-				substring);
-		listener.getLogger().println(Messages.ContainsCondition_console_args(
-				expandedString, expandedSubstring));
+		String expandedSubstring = TokenMacro.expandAll(build, listener, substring);
+		listener.getLogger().println(Messages.ContainsCondition_console_args(expandedString, expandedSubstring));
 		return caseSensitive ? expandedString.contains(expandedSubstring)
-				: expandedString.toLowerCase()
-						.contains(expandedSubstring.toLowerCase());
+				: expandedString.toLowerCase().contains(expandedSubstring.toLowerCase());
 	}
 
 }

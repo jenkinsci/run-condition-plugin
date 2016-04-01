@@ -43,15 +43,13 @@ import hudson.util.ListBoxModel;
 public class StringLengthCondition extends AlwaysPrebuildRunCondition {
 
 	@Extension
-	public static class StringLengthConditionDescriptor
-			extends RunConditionDescriptor {
+	public static class StringLengthConditionDescriptor extends RunConditionDescriptor {
 
 		/**
 		 * Validates the <code>length</code> field.
 		 * 
-		 * @return <code>FormValidation.ok()</code> if validation is successful;
-		 *         <code>FormValidation.error()</code> with an error message
-		 *         otherwise.
+		 * @return <code>FormValidation.ok()</code> if validation is successful; <code>FormValidation.error()</code>
+		 *         with an error message otherwise.
 		 */
 		public FormValidation doCheckLength(@QueryParameter String value) {
 			boolean ok;
@@ -61,17 +59,13 @@ public class StringLengthCondition extends AlwaysPrebuildRunCondition {
 			} catch (NumberFormatException e) {
 				ok = false;
 			}
-			return ok ? FormValidation.ok()
-					: FormValidation.error(Messages
-							.FileLengthCondition_doCheckLength_errMsg());
+			return ok ? FormValidation.ok() : FormValidation.error(Messages.FileLengthCondition_doCheckLength_errMsg());
 		}
 
 		/**
-		 * Returns the <code>ListBoxModel</code> object containing drop-down
-		 * options for the <code>when</code> field.
+		 * Returns the <code>ListBoxModel</code> object containing drop-down options for the <code>when</code> field.
 		 * 
-		 * @return The <code>ListBoxModel</code> object containing drop-down
-		 *         options for the <code>when</code> field.
+		 * @return The <code>ListBoxModel</code> object containing drop-down options for the <code>when</code> field.
 		 */
 		public ListBoxModel doFillWhenItems() {
 			ListBoxModel lbm = new ListBoxModel();
@@ -116,19 +110,17 @@ public class StringLengthCondition extends AlwaysPrebuildRunCondition {
 	/**
 	 * Constructs a <code>StringLengthCondition</code> object.
 	 * 
-	 * @param file
+	 * @param string
 	 *            The string to compare length on.
 	 * @param trim
-	 *            Whether the string should be trimmed before the length
-	 *            comparison.
+	 *            Whether the string should be trimmed before the length comparison.
 	 * @param length
 	 *            The comparison length.
 	 * @param when
 	 *            The comparison type.
 	 */
 	@DataBoundConstructor
-	public StringLengthCondition(String string, boolean trim, String length,
-			String when) {
+	public StringLengthCondition(String string, boolean trim, String length, String when) {
 		this.string = string;
 		this.trim = trim;
 		this.length = length;
@@ -165,20 +157,15 @@ public class StringLengthCondition extends AlwaysPrebuildRunCondition {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.jenkins_ci.plugins.run_condition.RunCondition#runPerform(hudson.model
-	 * .AbstractBuild, hudson.model.BuildListener)
+	 * @see org.jenkins_ci.plugins.run_condition.RunCondition#runPerform(hudson.model .AbstractBuild,
+	 * hudson.model.BuildListener)
 	 */
 	@Override
-	public boolean runPerform(AbstractBuild<?, ?> build, BuildListener listener)
-			throws Exception {
+	public boolean runPerform(AbstractBuild<?, ?> build, BuildListener listener) throws Exception {
 		String expandedString = TokenMacro.expandAll(build, listener, string);
-		listener.getLogger().println(
-				Messages.StringLengthCondition_console_args(expandedString,
-						trim, length, when));
+		listener.getLogger().println(Messages.StringLengthCondition_console_args(expandedString, trim, length, when));
 		// Let exception be thrown when file does not exist
-		long stringLength = trim ? expandedString.trim().length()
-				: expandedString.length();
+		long stringLength = trim ? expandedString.trim().length() : expandedString.length();
 		long lengthValue = Long.valueOf(length);
 		for (When whenEnumValue : When.values()) {
 			if (whenEnumValue.getName().equals(when)) {
@@ -189,11 +176,10 @@ public class StringLengthCondition extends AlwaysPrebuildRunCondition {
 	}
 
 	/**
-	 * Returns whether the string should be trimmed before the length
-	 * comparison.
+	 * Returns whether the string should be trimmed before the length comparison.
 	 * 
-	 * @return <code>true</code> if the string should be trimmed before the
-	 *         length comparison; <code>false</code> otherwise.
+	 * @return <code>true</code> if the string should be trimmed before the length comparison; <code>false</code>
+	 *         otherwise.
 	 */
 	public boolean trim() {
 		return trim;
