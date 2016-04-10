@@ -105,6 +105,13 @@ public final class CauseCondition extends AlwaysPrebuildRunCondition {
             public boolean isCausedBy(Cause cause) {
                 return isCauseByForXTrigger(this, cause);
             }
+        },
+        // a NuGet dependency
+        NUGET_CAUSE("org.jenkinsci.lib.xtrigger.XTriggerCause", "NuGet") {
+            @Override
+            public boolean isCausedBy(Cause cause) {
+                return isCauseByForXTrigger(this, cause);
+            }
         };
 
         public final String causeClassName;
