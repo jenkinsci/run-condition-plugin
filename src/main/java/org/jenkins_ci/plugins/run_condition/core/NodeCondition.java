@@ -35,6 +35,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import hudson.model.Executor;
 import jenkins.model.Jenkins;
 
 import org.jenkins_ci.plugins.run_condition.Messages;
@@ -58,8 +59,11 @@ public final class NodeCondition extends AlwaysPrebuildRunCondition {
 
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) {
-
-        String currentNode = build.getExecutor().getOwner().getName();
+        Executor exec = build.getExecutor();
+        if (exec == null) {
+            return false;
+        }
+        String currentNode = exec.getOwner().getName();
         currentNode = "".equals(currentNode) ? MASTER : currentNode;
         listener.getLogger().println(Messages.nodeCondition_check(currentNode, Arrays.toString(getAllowedNodes().toArray())));
         return getAllowedNodes().contains(currentNode);
@@ -106,7 +110,11 @@ public final class NodeCondition extends AlwaysPrebuildRunCondition {
          */
         @SuppressWarnings("deprecation")
         private static List<String> getSlaveNames() {
-            ComputerSet computers = Jenkins.getInstance().getComputer();
+            Jenkins j = Jenkins.getInstance();
+            if (j == null) {
+                return null;
+            }
+            ComputerSet computers = j.getComputer();
             List<String> slaveNames = computers.get_slaveNames();
 
             // slaveNames is unmodifiable, therefore create a new list

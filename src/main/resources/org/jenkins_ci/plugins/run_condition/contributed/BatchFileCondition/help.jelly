@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <div>
     Runs a Windows batch script for checking the condition
     The script will be run with the workspace as the current directory.

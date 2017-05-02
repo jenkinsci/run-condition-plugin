@@ -35,12 +35,17 @@ import hudson.matrix.MatrixBuild;
 import hudson.matrix.MatrixRun;
 import hudson.matrix.AxisList;
 import hudson.tasks.Builder;
+import org.junit.Rule;
+import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.MockBuilder;
 import org.jvnet.hudson.test.Bug;
 
 import hudson.triggers.TimerTrigger.TimerTriggerCause;
+
+import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.io.IOException;
 import org.acegisecurity.Authentication;
@@ -51,14 +56,18 @@ import org.jenkins_ci.plugins.run_condition.BuildStepRunner;
 import org.jenkins_ci.plugins.run_condition.BuildStepRunner.Run;
 
 import org.jenkinsci.plugins.conditionalbuildstep.ConditionalBuilder;
-//import org.jenkins_ci.plugins.run_condition.core.CauseCondition;
 
 import org.junit.Test;
-import org.jvnet.hudson.test.HudsonTestCase;
 import java.util.Collections;
 
+import static org.junit.Assert.assertEquals;
 
-public class CauseConditionTest extends HudsonTestCase {
+
+public class CauseConditionTest {
+
+    public @Rule
+    JenkinsRule j = new JenkinsRule();
+
     //-------------------------------------------------------
     //UserCause deprecated after Jenkins 1.427
     @Test
@@ -135,7 +144,7 @@ public class CauseConditionTest extends HudsonTestCase {
     public void testMatrixUpstreamCause() throws Exception {
 
         // setup some Causes
-        FreeStyleProject upProject = createFreeStyleProject("firstProject");
+        FreeStyleProject upProject = j.createFreeStyleProject("firstProject");
         FreeStyleBuild upBuild = upProject.scheduleBuild2(0).get();
 
         Cause upstreamCause = new UpstreamCause(upBuild);
@@ -158,7 +167,7 @@ public class CauseConditionTest extends HudsonTestCase {
     public void testMatrixUserCause() throws Exception {
 
         // setup some Causes
-        FreeStyleProject upProject = createFreeStyleProject("secondProject");
+        FreeStyleProject upProject = j.createFreeStyleProject("secondProject");
         FreeStyleBuild upBuild = upProject.scheduleBuild2(0).get();
 
         Cause upstreamCause = new UpstreamCause(upBuild);
@@ -191,14 +200,13 @@ public class CauseConditionTest extends HudsonTestCase {
         List<MatrixRun> runs = matrixBuild.getRuns();
         assertEquals(4,runs.size());
         for (MatrixRun run : runs) {
-            assertBuildStatus(testResult, run);
+            j.assertBuildStatus(testResult, run);
         }
 
     }
 
-    @Override
-    protected MatrixProject createMatrixProject(String name) throws IOException {
-        MatrixProject p = super.createMatrixProject(name);
+    private MatrixProject createMatrixProject() throws IOException {
+        MatrixProject p = j.createProject(MatrixProject.class);
 
         // set up 2x2 matrix
         AxisList axes = new AxisList();
@@ -210,7 +218,7 @@ public class CauseConditionTest extends HudsonTestCase {
     }
     private void runtest(List<Cause> causes, RunCondition condition, boolean expected) throws Exception  {
 
-        FreeStyleProject project = createFreeStyleProject();
+        FreeStyleProject project = j.createFreeStyleProject();
         FreeStyleBuild build;
 
         if (causes.size() > 0) {
@@ -220,7 +228,21 @@ public class CauseConditionTest extends HudsonTestCase {
         }
         if (causes.size() > 0) {
             // add other causes
-            build.getAction(CauseAction.class).getCauses().addAll(causes);
+            try {
+                build.getAction(CauseAction.class).getCauses().addAll(causes);
+            } catch (UnsupportedOperationException ex) {
+                // getCauses() return an unmodifiable collection in newer Jenkins versions
+                CauseAction act = build.getAction(CauseAction.class);
+
+                List<Cause> all = new LinkedList<Cause>(act.getCauses());
+                all.addAll(causes);
+                CauseAction newAct = new CauseAction(all);
+
+                Method m = build.getClass().getMethod("removeAction", Action.class);
+                m.invoke(build, act);
+
+                build.addAction(newAct);
+            }
         }
 
         System.out.println(build.getDisplayName()+" completed");
@@ -241,7 +263,8 @@ public class CauseConditionTest extends HudsonTestCase {
     private UserCause createUserCause(String userid) {
         Authentication a = new UsernamePasswordAuthenticationToken(userid, userid);
 
-        a = hudson.getSecurityRealm().getSecurityComponents().manager.authenticate(a);
+        a = j.jenkins.getSecurityRealm().getSecurityComponents().manager.authenticate(a);
+
         SecurityContextHolder.getContext().setAuthentication(a);
         UserCause cause = new UserCause();
 
