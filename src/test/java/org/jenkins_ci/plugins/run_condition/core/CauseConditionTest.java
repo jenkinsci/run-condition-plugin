@@ -35,6 +35,7 @@ import hudson.matrix.MatrixBuild;
 import hudson.matrix.MatrixRun;
 import hudson.matrix.AxisList;
 import hudson.tasks.Builder;
+import org.junit.Before;
 import org.junit.Rule;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.MockBuilder;
@@ -42,15 +43,11 @@ import org.jvnet.hudson.test.Bug;
 
 import hudson.triggers.TimerTrigger.TimerTriggerCause;
 
-import java.lang.reflect.Method;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.io.IOException;
-import org.acegisecurity.Authentication;
-import org.acegisecurity.context.SecurityContextHolder;
-import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.jenkins_ci.plugins.run_condition.RunCondition;
 import org.jenkins_ci.plugins.run_condition.BuildStepRunner;
 import org.jenkins_ci.plugins.run_condition.BuildStepRunner.Run;
@@ -67,6 +64,11 @@ public class CauseConditionTest {
 
     public @Rule
     JenkinsRule j = new JenkinsRule();
+
+    @Before
+    public void setupDummySecurity() {
+        j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
+    }
 
     //-------------------------------------------------------
     //UserCause deprecated after Jenkins 1.427
@@ -228,21 +230,13 @@ public class CauseConditionTest {
         }
         if (causes.size() > 0) {
             // add other causes
-            try {
-                build.getAction(CauseAction.class).getCauses().addAll(causes);
-            } catch (UnsupportedOperationException ex) {
-                // getCauses() return an unmodifiable collection in newer Jenkins versions
-                CauseAction act = build.getAction(CauseAction.class);
+            CauseAction act = build.getAction(CauseAction.class);
 
-                List<Cause> all = new LinkedList<Cause>(act.getCauses());
-                all.addAll(causes);
-                CauseAction newAct = new CauseAction(all);
+            List<Cause> all = new LinkedList<Cause>(act.getCauses());
+            all.addAll(causes);
+            CauseAction newAct = new CauseAction(all);
 
-                Method m = build.getClass().getMethod("removeAction", Action.class);
-                m.invoke(build, act);
-
-                build.addAction(newAct);
-            }
+            build.replaceAction(newAct);
         }
 
         System.out.println(build.getDisplayName()+" completed");
@@ -261,14 +255,8 @@ public class CauseConditionTest {
     }
 
     private UserCause createUserCause(String userid) {
-        Authentication a = new UsernamePasswordAuthenticationToken(userid, userid);
-
-        a = j.jenkins.getSecurityRealm().getSecurityComponents().manager.authenticate(a);
-
-        SecurityContextHolder.getContext().setAuthentication(a);
-        UserCause cause = new UserCause();
-
-        return cause;
+        User.get(userid).impersonate();
+        return new UserCause();
     }
 }
 
