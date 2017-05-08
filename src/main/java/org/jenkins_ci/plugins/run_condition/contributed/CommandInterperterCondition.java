@@ -40,7 +40,7 @@ import org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition;
  */
 public abstract class CommandInterperterCondition extends AlwaysPrebuildRunCondition {
     /**
-     * Command to execute. The format depends on the actual {@link CommandInterpreter} implementation.
+     * Command to execute. The format depends on the actual {@link CommandInterperterCondition} implementation.
      */
     protected final String command;
 
@@ -55,6 +55,9 @@ public abstract class CommandInterperterCondition extends AlwaysPrebuildRunCondi
     @Override
     public boolean runPerform(AbstractBuild<?, ?> build, BuildListener listener) throws InterruptedException {
         FilePath ws = build.getWorkspace();
+        if (ws == null) {
+            return false;
+        }
         FilePath script = null;
 
         try {
