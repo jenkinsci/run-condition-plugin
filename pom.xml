@@ -29,7 +29,7 @@
     <parent>
         <groupId>org.jenkins-ci.plugins</groupId>
         <artifactId>plugin</artifactId>
-        <version>2.26</version>
+        <version>3.39</version>
     </parent>
 
     <artifactId>run-condition</artifactId>
@@ -40,8 +40,8 @@
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Run+Condition+Plugin</url>
 
     <properties>
-        <jenkins.version>1.580.1</jenkins.version>
-        <java.level>6</java.level>
+        <jenkins.version>2.107.3</jenkins.version>
+        <java.level>8</java.level>
     </properties>
     
     <licenses>
@@ -80,8 +80,15 @@
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
             <artifactId>junit</artifactId>
-            <version>1.20</version>
+            <version>1.27</version>
             <scope>test</scope>
+            <!-- Conflict with the core -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jenkins-ci</groupId>
+                    <artifactId>symbol-annotation</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jenkins-ci.plugins</groupId>
@@ -102,13 +109,6 @@
         <system>JIRA</system>
         <url>http://issues.jenkins-ci.org/</url>
     </issueManagement>
-
-    <distributionManagement>
-        <repository>
-            <id>maven.jenkins-ci.org</id>
-            <url>https://repo.jenkins-ci.org/releases</url>
-        </repository>
-    </distributionManagement>
 
     <repositories>
         <repository>
