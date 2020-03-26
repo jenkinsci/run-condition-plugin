@@ -34,6 +34,7 @@ import hudson.matrix.MatrixProject;
 import hudson.matrix.MatrixBuild;
 import hudson.matrix.MatrixRun;
 import hudson.matrix.AxisList;
+import hudson.tasks.BuildStep;
 import hudson.tasks.Builder;
 import org.junit.Before;
 import org.junit.Rule;
@@ -190,7 +191,7 @@ public class CauseConditionTest {
         Result testResult = builderRuns ? Result.UNSTABLE:Result.SUCCESS;
 
         // create conditional build step requirements
-        List<Builder> builders = Collections.singletonList((Builder)new MockBuilder(Result.UNSTABLE));
+        List<BuildStep> builders = Collections.singletonList((Builder)new MockBuilder(Result.UNSTABLE));
 
         BuildStepRunner runner = new Run();
 

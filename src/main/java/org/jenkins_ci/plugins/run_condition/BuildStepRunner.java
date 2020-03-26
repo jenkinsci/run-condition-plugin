@@ -58,10 +58,12 @@ public abstract class BuildStepRunner implements Describable<BuildStepRunner> {
     }
 
     private static void setResult(final AbstractBuild<?, ?> build, final Result result) {
-        if (build.getResult() == null)
+        Result auxResult = build.getResult();
+        if (auxResult == null) {
             build.setResult(result);
-        else
-            build.setResult(result.combine(build.getResult()));
+        } else {
+            build.setResult(result.combine(auxResult));
+        }
     }
 
     private static String getDisplayName(final Describable describable) {
