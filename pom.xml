@@ -35,7 +35,7 @@
     <artifactId>run-condition</artifactId>
     <packaging>hpi</packaging>
     <name>Run Condition Plugin</name>
-    <version>1.3-SNAPSHOT</version>
+    <version>1.3</version>
     <description>Define conditions for the execution of build steps</description>
     <url>http://wiki.jenkins-ci.org/display/JENKINS/Run+Condition+Plugin</url>
 
@@ -101,7 +101,7 @@
         <url>https://github.com/jenkinsci/run-condition-plugin</url>
         <connection>scm:git:git://github.com/jenkinsci/run-condition-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/run-condition-plugin.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>run-condition-1.3</tag>
   </scm>
     
     <issueManagement>
