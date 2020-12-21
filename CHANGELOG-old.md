@@ -1,5 +1,9 @@
 ## Change log
 
+#### GitHub releases
+
+Newer versions are published on GitHub releases
+
 #### 1.0 (10/5/2013)
 
 -   fix [JENKINS-14438](https://issues.jenkins-ci.org/browse/JENKINS-14438)
