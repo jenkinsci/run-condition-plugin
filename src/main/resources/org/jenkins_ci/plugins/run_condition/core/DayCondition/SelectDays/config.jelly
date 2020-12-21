@@ -23,16 +23,16 @@
   ~ THE SOFTWARE.
   -->
 
-<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:st="jelly:stapler" >
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form" xmlns:st="jelly:stapler" xmlns:cond="/lib/runConditionPlugin">
 
     <f:entry>
         <j:scope>
             <j:set var="items" value="${instance.days ?: descriptor.defaultDays}"/>
             <j:set var="descriptor" value="${descriptor.dayDescriptor}"/>
             <f:repeatable items="${items}" var="instance" name="days" header="" noAddButton="true">
-                <table width="100%" padding="0">
+                <cond:blockWrapper>
                     <st:include page="config.jelly" class="${descriptor.clazz}"/>
-                </table>
+                </cond:blockWrapper>
             </f:repeatable>
         </j:scope>
     </f:entry>
