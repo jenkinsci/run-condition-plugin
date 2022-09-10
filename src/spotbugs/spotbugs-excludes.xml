@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <!--
+    Exclusions in this section have been triaged and determined to be false positives.
+  -->
+
+  <!--
+    Here lies technical debt. Exclusions in this section have not yet been triaged. When working on
+    on this section, pick an exclusion to triage, then:
+    - If it is a false positive, add a @SuppressFBWarnings(value = "[…]", justification = "[…]")
+      annotation indicating the reason why it is a false positive, then remove the exclusion from
+      this section.
+    - If it is not a false positive, fix the bug, then remove the exclusion from this section.
+   -->
+  <Match>
+    <Or>
+      <And>
+        <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
+        <Class name="org.jenkins_ci.plugins.run_condition.BuildStepRunner"/>
+      </And>
+      <And>
+        <Bug pattern="DM_CONVERT_CASE"/>
+        <Class name="org.jenkins_ci.plugins.run_condition.core.BooleanCondition"/>
+        <Method name="runPerform"/>
+      </And>
+      <And>
+        <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"/>
+        <Class name="org.jenkins_ci.plugins.run_condition.core.NodeCondition$NodeNameComparator"/>
+      </And>
+    </Or>
+  </Match>
+</FindBugsFilter>
