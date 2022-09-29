@@ -111,11 +111,16 @@
             <artifactId>mailer</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>run-condition</artifactId>
+            <version>1.6-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <scm>
         <url>https://github.com/jenkinsci/run-condition-plugin</url>
-        <connection>scm:git:git://github.com/jenkinsci/run-condition-plugin.git</connection>
+        <connection>git@github.com:jenkinsci/run-condition-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/run-condition-plugin.git</developerConnection>
       <tag>${scmTag}</tag>
   </scm>
