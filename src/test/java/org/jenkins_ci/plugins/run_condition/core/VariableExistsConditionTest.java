@@ -36,7 +36,7 @@ public class VariableExistsConditionTest {
          assertEquals(true,values.getEnv().get(0).key.equals("value"));
       }
 
-    @Test
+      @Test
     public void VariableExistsConditionSuccess(){
 
         VariableExistsCondition variable1 = new VariableExistsCondition("Hello");
