@@ -36,9 +36,6 @@ public class VariableExistsConditionTest {
          assertEquals(true,values.getEnv().get(0).key.equals("value"));
       }
 
-
-
-
     @Test
     public void VariableExistsConditionSuccess(){
 
