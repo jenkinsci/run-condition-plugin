@@ -115,7 +115,7 @@
 
     <scm>
         <url>https://github.com/jenkinsci/run-condition-plugin</url>
-        <connection>git@github.com:jenkinsci/run-condition-plugin.git</connection>
+        <connection>scm:git:https://github.com/jenkinsci/run-condition-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/run-condition-plugin.git</developerConnection>
       <tag>${scmTag}</tag>
   </scm>
