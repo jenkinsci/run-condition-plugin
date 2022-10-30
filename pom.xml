@@ -42,6 +42,10 @@
         <revision>1.6</revision>
         <changelist>-SNAPSHOT</changelist>
         <jenkins.version>2.346.3</jenkins.version>
+        <spotbugs.effort>Max</spotbugs.effort>
+        <spotbugs.failOnError>true</spotbugs.failOnError>
+		<spotbugs.threshold>Low</spotbugs.threshold>
+        <spotbugs.excludeFilterFile>${project.basedir}/src/spotbugs/spotbugs-excludes.xml</spotbugs.excludeFilterFile>
     </properties>
 
     <licenses>
