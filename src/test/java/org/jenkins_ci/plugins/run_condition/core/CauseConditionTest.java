@@ -64,11 +64,11 @@ import static org.junit.Assert.assertEquals;
 public class CauseConditionTest {
 
     public @Rule
-    JenkinsRule j = new JenkinsRule();
+    JenkinsRule jenkinsRule = new JenkinsRule();
 
     @Before
     public void setupDummySecurity() {
-        j.jenkins.setSecurityRealm(j.createDummySecurityRealm());
+        jenkinsRule.jenkins.setSecurityRealm(jenkinsRule.createDummySecurityRealm());
     }
 
     //-------------------------------------------------------
@@ -147,7 +147,7 @@ public class CauseConditionTest {
     public void testMatrixUpstreamCause() throws Exception {
 
         // setup some Causes
-        FreeStyleProject upProject = j.createFreeStyleProject("firstProject");
+        FreeStyleProject upProject = jenkinsRule.createFreeStyleProject("firstProject");
         FreeStyleBuild upBuild = upProject.scheduleBuild2(0).get();
 
         Cause upstreamCause = new UpstreamCause(upBuild);
@@ -170,7 +170,7 @@ public class CauseConditionTest {
     public void testMatrixUserCause() throws Exception {
 
         // setup some Causes
-        FreeStyleProject upProject = j.createFreeStyleProject("secondProject");
+        FreeStyleProject upProject = jenkinsRule.createFreeStyleProject("secondProject");
         FreeStyleBuild upBuild = upProject.scheduleBuild2(0).get();
 
         Cause upstreamCause = new UpstreamCause(upBuild);
@@ -203,13 +203,13 @@ public class CauseConditionTest {
         List<MatrixRun> runs = matrixBuild.getRuns();
         assertEquals(4,runs.size());
         for (MatrixRun run : runs) {
-            j.assertBuildStatus(testResult, run);
+            jenkinsRule.assertBuildStatus(testResult, run);
         }
 
     }
 
     private MatrixProject createMatrixProject() throws IOException {
-        MatrixProject p = j.createProject(MatrixProject.class);
+        MatrixProject p = jenkinsRule.createProject(MatrixProject.class);
 
         // set up 2x2 matrix
         AxisList axes = new AxisList();
@@ -221,7 +221,7 @@ public class CauseConditionTest {
     }
     private void runtest(List<Cause> causes, RunCondition condition, boolean expected) throws Exception  {
 
-        FreeStyleProject project = j.createFreeStyleProject();
+        FreeStyleProject project = jenkinsRule.createFreeStyleProject();
         FreeStyleBuild build;
 
         if (causes.size() > 0) {
