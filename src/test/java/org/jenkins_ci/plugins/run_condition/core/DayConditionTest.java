@@ -46,18 +46,18 @@ public class DayConditionTest {
     private final Calendar buildTime = Calendar.getInstance();
     private final Calendar currentTime = Calendar.getInstance();
     private final IMocksControl mockControl = EasyMock.createNiceControl();
-    private final BuildListener listener = mockControl.createMock(BuildListener.class);
-    private final PrintStream logger = new PrintStream(new ByteArrayOutputStream());
+    private final BuildListener buildListener = mockControl.createMock(BuildListener.class);
+    private final PrintStream printStream = new PrintStream(new ByteArrayOutputStream());
     
     @Before
     public void setUp() throws Exception {
-        expect(listener.getLogger()).andReturn(logger).anyTimes();
+        expect(buildListener.getLogger()).andReturn(printStream).anyTimes();
         mockControl.replay();
     }
 
     @After
     public void tearDown() throws Exception {
-        logger.close();
+        printStream.close();
     }
 
     @Test
@@ -175,8 +175,8 @@ public class DayConditionTest {
 
     private void assertCondition(final RunCondition condition, final boolean expectedPrebuild, final boolean expectedPerform)
                                                                                                                         throws Exception {
-        assertEquals(expectedPrebuild, condition.runPrebuild(null, listener));
-        assertEquals(expectedPerform, condition.runPerform(null, listener));
+        assertEquals(expectedPrebuild, condition.runPrebuild(null, buildListener));
+        assertEquals(expectedPerform, condition.runPerform(null, buildListener));
     }
 
     private class DayConditionForTest extends DayCondition {

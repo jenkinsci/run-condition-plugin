@@ -49,16 +49,16 @@ import static org.junit.Assert.assertTrue;
 
 public class StatusConditionTest {
 
-    private final BuildListener listener = createMock(BuildListener.class);
+    private final BuildListener buildListener = createMock(BuildListener.class);
     private final PrintStream logger = new PrintStream(new ByteArrayOutputStream());
-    private final FreeStyleBuild build = createMock(FreeStyleBuild.class);
+    private final FreeStyleBuild freeStyleBuild = createMock(FreeStyleBuild.class);
 
     private static Result[] BuildResults = { SUCCESS, UNSTABLE, FAILURE, NOT_BUILT, ABORTED };
 
     @Before
     public void setUp() throws Exception {
-        expect(listener.getLogger()).andReturn(logger).anyTimes();
-        replay(listener);
+        expect(buildListener.getLogger()).andReturn(logger).anyTimes();
+        replay(buildListener);
     }
 
     @After
@@ -252,13 +252,13 @@ public class StatusConditionTest {
     }
 
     private void assertRunResult(final StatusCondition condition, final Result buildResult, final boolean expected) throws Exception {
-        reset(build);
-        expect(build.getResult()).andReturn(buildResult).anyTimes();
-        replay(build);
+        reset(freeStyleBuild);
+        expect(freeStyleBuild.getResult()).andReturn(buildResult).anyTimes();
+        replay(freeStyleBuild);
 
-        assertTrue(condition.runPrebuild(build, listener));
-        assertEquals(expected, condition.runPerform(build, listener));
-        verify(build);
+        assertTrue(condition.runPrebuild(freeStyleBuild, buildListener));
+        assertEquals(expected, condition.runPerform(freeStyleBuild, buildListener));
+        verify(freeStyleBuild);
     }
 
 }
