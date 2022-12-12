@@ -49,7 +49,7 @@ public class VariableExistsConditionTest {
 
         VariableExistsCondition variable1 = new VariableExistsCondition("Hello");
         VariableExistsCondition variable2 = new VariableExistsCondition(null);
-        assertNotEquals(variable1.getVariableName(),"Hello");
+        assertNotEquals(variable1.getVariableName(),"hello");
         assertNotEquals(variable2.getVariableName(),"Hello");
 
     }
