@@ -5,7 +5,7 @@
 buildPlugin(
   useContainerAgent: true,
   configurations: [
-    [platform: 'windows', jdk: '17', jenkins: '2.375.1'],
     [platform: 'linux',   jdk: '11'],
+    [platform: 'windows', jdk: '17', jenkins: '2.409'],
   ]
 )
