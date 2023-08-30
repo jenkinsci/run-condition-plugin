@@ -35,11 +35,11 @@
     <artifactId>run-condition</artifactId>
     <packaging>hpi</packaging>
     <name>Run Condition Plugin</name>
-    <version>1.7</version>
+    <version>${revision}${changelist}</version>
     <url>https://github.com/jenkinsci/run-condition-plugin</url>
 
     <properties>
-        <revision>1.7</revision>
+        <revision>1.8</revision>
         <changelist>-SNAPSHOT</changelist>
         <jenkins.version>2.387.3</jenkins.version>
         <spotbugs.effort>Max</spotbugs.effort>
@@ -117,7 +117,7 @@
         <url>https://github.com/jenkinsci/run-condition-plugin</url>
         <connection>scm:git:https://github.com/jenkinsci/run-condition-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/run-condition-plugin.git</developerConnection>
-      <tag>run-condition-1.7</tag>
+      <tag>${scmTag}</tag>
   </scm>
 
     <issueManagement>
