@@ -35,7 +35,7 @@
     <artifactId>run-condition</artifactId>
     <packaging>hpi</packaging>
     <name>Run Condition Plugin</name>
-    <version>${revision}${changelist}</version>
+    <version>1.7</version>
     <url>https://github.com/jenkinsci/run-condition-plugin</url>
 
     <properties>
@@ -117,7 +117,7 @@
         <url>https://github.com/jenkinsci/run-condition-plugin</url>
         <connection>scm:git:https://github.com/jenkinsci/run-condition-plugin.git</connection>
         <developerConnection>scm:git:git@github.com:jenkinsci/run-condition-plugin.git</developerConnection>
-      <tag>${scmTag}</tag>
+      <tag>run-condition-1.7</tag>
   </scm>
 
     <issueManagement>
