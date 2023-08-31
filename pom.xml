@@ -39,7 +39,7 @@
     <url>https://github.com/jenkinsci/run-condition-plugin</url>
 
     <properties>
-        <revision>1.7</revision>
+        <revision>1.8</revision>
         <changelist>-SNAPSHOT</changelist>
         <jenkins.version>2.387.3</jenkins.version>
         <spotbugs.effort>Max</spotbugs.effort>
