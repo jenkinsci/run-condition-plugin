@@ -35,12 +35,12 @@
     <artifactId>run-condition</artifactId>
     <packaging>hpi</packaging>
     <name>Run Condition Plugin</name>
-    <version>${revision}${changelist}</version>
+    <version>${changelist}</version>
     <url>https://github.com/jenkinsci/run-condition-plugin</url>
 
     <properties>
         <revision>1.8</revision>
-        <changelist>-SNAPSHOT</changelist>
+        <changelist>999999-SNAPSHOT</changelist>
         <jenkins.version>2.387.3</jenkins.version>
         <spotbugs.effort>Max</spotbugs.effort>
         <spotbugs.threshold>Low</spotbugs.threshold>
