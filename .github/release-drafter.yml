@@ -1,2 +1,0 @@
-_extends: .github
-tag-template: run-condition-$NEXT_MINOR_VERSION

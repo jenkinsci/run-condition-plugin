@@ -1,0 +1,27 @@
+<FindBugsFilter>
+  <!--
+    Exclusions in this section have been triaged and determined to be false positives.
+  -->
+
+  <Match>
+    <Bug pattern="SIC_INNER_SHOULD_BE_STATIC_ANON"/>
+    <Class name="org.jenkins_ci.plugins.run_condition.BuildStepRunner"/>
+  </Match>
+
+  <Match>
+    <Bug pattern="SE_NO_SERIALVERSIONID"/>
+    <Class name="jenkins.plugins.http_request.auth.CertificateAuthentication"/>
+  </Match>
+
+  <Match>
+    <Bug pattern="DM_CONVERT_CASE"/>
+    <Class name="org.jenkins_ci.plugins.run_condition.core.BooleanCondition"/>
+    <Method name="runPerform"/>
+  </Match>
+
+  <Match>
+    <Bug pattern="SE_COMPARATOR_SHOULD_BE_SERIALIZABLE"/>
+    <Class name="org.jenkins_ci.plugins.run_condition.core.NodeCondition$NodeNameComparator"/>
+  </Match>
+
+</FindBugsFilter>

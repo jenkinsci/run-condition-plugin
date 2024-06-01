@@ -21,7 +21,7 @@ import static org.junit.Assert.*;
 public class VariableExistsConditionTest {
 
     @Rule
-    public JenkinsRule j = new JenkinsRule();
+    public JenkinsRule jenkinsRule = new JenkinsRule();
 
     @Test
 
@@ -30,8 +30,8 @@ public class VariableExistsConditionTest {
          EnvironmentVariablesNodeProperty prop = new EnvironmentVariablesNodeProperty();
          EnvVars env = prop.getEnvVars();
          env.put("value", "1");
-         j.jenkins.getGlobalNodeProperties().add(prop);
-         EnvironmentVariablesNodeProperty values= (EnvironmentVariablesNodeProperty) j.jenkins.getGlobalNodeProperties().get(0);
+         jenkinsRule.jenkins.getGlobalNodeProperties().add(prop);
+         EnvironmentVariablesNodeProperty values= (EnvironmentVariablesNodeProperty) jenkinsRule.jenkins.getGlobalNodeProperties().get(0);
          assertEquals(false,values.getEnv().get(0).key.equals("Value"));
          assertEquals(true,values.getEnv().get(0).key.equals("value"));
       }
