@@ -40,21 +40,16 @@ public class StringsMatchCondition extends AlwaysPrebuildRunCondition {
 
     final String arg1;
     final String arg2;
-    boolean ignoreCase;
+    final boolean ignoreCase;
     boolean environmentVariables;
 
     @DataBoundConstructor
-    public StringsMatchCondition(final String arg1, final String arg2) {
+    public StringsMatchCondition(final String arg1, final String arg2, final boolean ignoreCase) {
         this.arg1 = arg1;
         this.arg2 = arg2;
-
-
+        this.ignoreCase = ignoreCase;
     }
-    @DataBoundSetter
-    public void setIgnoreCase(Boolean ignoreCase){
 
-        this.ignoreCase=ignoreCase;
-    }
     @DataBoundSetter
     public void setEnvironmentVariables(Boolean enviornmentVariables){
 
