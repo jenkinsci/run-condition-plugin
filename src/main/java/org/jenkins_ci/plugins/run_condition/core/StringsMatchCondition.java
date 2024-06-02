@@ -51,9 +51,8 @@ public class StringsMatchCondition extends AlwaysPrebuildRunCondition {
     }
 
     @DataBoundSetter
-    public void setEnvironmentVariables(Boolean enviornmentVariables){
-
-        this.environmentVariables=enviornmentVariables;
+    public void setEnvironmentVariables(Boolean environmentVariables){
+        this.environmentVariables=environmentVariables;
     }
 
     public boolean isEnvironmentVariables() {
@@ -74,21 +73,15 @@ public class StringsMatchCondition extends AlwaysPrebuildRunCondition {
 
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
-
-        if(environmentVariables == true){
-
-             final String expanded1 = TokenMacro.expandAll(build, listener, "$"+"{"+arg1+"}");
-             final String expanded2 = TokenMacro.expandAll(build, listener, "$"+"{"+arg2+"}");
-
-             listener.getLogger().println(Messages.stringsMatchCondition_console_args(expanded1, expanded2));
-             if (expanded1 == null) return false;
-             return ignoreCase ? expanded1.equalsIgnoreCase(expanded2) : expanded1.equals(expanded2);
-        }
-        else {
+        if (environmentVariables == true) {
+            final String expanded1 = TokenMacro.expandAll(build, listener, "$"+"{"+arg1+"}");
+            final String expanded2 = TokenMacro.expandAll(build, listener, "$"+"{"+arg2+"}");
+            listener.getLogger().println(Messages.stringsMatchCondition_console_args(expanded1, expanded2));
+            if (expanded1 == null) return false;
+            return ignoreCase ? expanded1.equalsIgnoreCase(expanded2) : expanded1.equals(expanded2);
+        } else {
             final String expanded1 = TokenMacro.expandAll(build, listener, arg1);
             final String expanded2 = TokenMacro.expandAll(build, listener, arg2);
-
-
             listener.getLogger().println(Messages.stringsMatchCondition_console_args(expanded1, expanded2));
             if (expanded1 == null) return false;
             return ignoreCase ? expanded1.equalsIgnoreCase(expanded2) : expanded1.equals(expanded2);
