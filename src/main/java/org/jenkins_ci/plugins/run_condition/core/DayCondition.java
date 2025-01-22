@@ -227,7 +227,7 @@ public class DayCondition extends RunCondition {
             public String getDayName(final int day) {
                 final Calendar ref = Calendar.getInstance();
                 ref.set(Calendar.DAY_OF_WEEK, day);
-                return String.format(Stapler.getCurrentRequest().getLocale(), "%tA", ref);
+                return String.format(Stapler.getCurrentRequest2().getLocale(), "%tA", ref);
             }
 
         }
