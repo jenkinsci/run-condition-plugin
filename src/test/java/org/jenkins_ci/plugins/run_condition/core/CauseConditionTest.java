@@ -35,12 +35,12 @@ import hudson.matrix.MatrixBuild;
 import hudson.matrix.MatrixRun;
 import hudson.matrix.AxisList;
 import hudson.tasks.BuildStep;
-import hudson.tasks.Builder;
-import org.junit.Before;
-import org.junit.Rule;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.jvnet.hudson.test.Issue;
 import org.jvnet.hudson.test.JenkinsRule;
 import org.jvnet.hudson.test.MockBuilder;
-import org.jvnet.hudson.test.Bug;
 
 import hudson.triggers.TimerTrigger.TimerTriggerCause;
 
@@ -55,97 +55,94 @@ import org.jenkins_ci.plugins.run_condition.BuildStepRunner.Run;
 
 import org.jenkinsci.plugins.conditionalbuildstep.ConditionalBuilder;
 
-import org.junit.Test;
 import java.util.Collections;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@WithJenkins
+class CauseConditionTest {
 
-public class CauseConditionTest {
+    private JenkinsRule jenkinsRule;
 
-    public @Rule
-    JenkinsRule jenkinsRule = new JenkinsRule();
-
-    @Before
-    public void setupDummySecurity() {
+    @BeforeEach
+    void setUp(JenkinsRule rule) {
+        jenkinsRule = rule;
         jenkinsRule.jenkins.setSecurityRealm(jenkinsRule.createDummySecurityRealm());
     }
 
     //-------------------------------------------------------
-    //UserCause deprecated after Jenkins 1.427
+    // UserCause deprecated after Jenkins 1.427
     @Test
-    public void testUCAnyUser() throws Exception {
+    void testUCAnyUser() throws Exception {
+        List<Cause> buildCauses = new ArrayList<>();
 
-        List<Cause> BuildCauses = new ArrayList<Cause>();
-
-// tests with no users defined
+        // tests with no users defined
 
         RunCondition condition = new CauseCondition("USER_CAUSE", false);
 
         // started by SYSTEM user
-        BuildCauses.add(new UserCause());
-        runtest(BuildCauses, condition, true);
+        buildCauses.add(new UserCause());
+        runTest(buildCauses, condition, true);
 
         // started by user
-        BuildCauses.clear();
-        BuildCauses.add(createUserCause("fred"));
-        runtest(BuildCauses, condition, true);
+        buildCauses.clear();
+        buildCauses.add(createUserCause("fred"));
+        runTest(buildCauses, condition, true);
 
         // started by different causes
-        BuildCauses.clear();
-        BuildCauses.add(new LegacyCodeCause());
-        runtest(BuildCauses, condition, false);
+        buildCauses.clear();
+        buildCauses.add(new LegacyCodeCause());
+        runTest(buildCauses, condition, false);
 
 
         // started by mltiple users including requested
-        BuildCauses.clear();
-        BuildCauses.add(createUserCause("tom"));
-        BuildCauses.add(createUserCause("fred"));
-        BuildCauses.add(createUserCause("harry"));
+        buildCauses.clear();
+        buildCauses.add(createUserCause("tom"));
+        buildCauses.add(createUserCause("fred"));
+        buildCauses.add(createUserCause("harry"));
 
-        runtest(BuildCauses, condition, true);
+        runTest(buildCauses, condition, true);
 
 
         // started by different causes
-        BuildCauses.clear();
-        BuildCauses.add(new LegacyCodeCause());
-        runtest(BuildCauses, condition, false);
+        buildCauses.clear();
+        buildCauses.add(new LegacyCodeCause());
+        runTest(buildCauses, condition, false);
 
         // multiple different causes
         // add a second cause
-        BuildCauses.add(new RemoteCause("dummy_host", "dummynote") );
-        runtest(BuildCauses, condition, false);
+        buildCauses.add(new RemoteCause("dummy_host", "dummynote") );
+        runTest(buildCauses, condition, false);
 
 
-// test with Exclusive set
+        // test with Exclusive set
         condition = new CauseCondition("USER_CAUSE", true);
 
         // started by correct user
-        BuildCauses.clear();
-        BuildCauses.add(createUserCause("fred"));
-        runtest(BuildCauses, condition, true);
+        buildCauses.clear();
+        buildCauses.add(createUserCause("fred"));
+        runTest(buildCauses, condition, true);
 
         // started by several users
-        BuildCauses.clear();
-        BuildCauses.add(createUserCause("eviloverlord"));
-        BuildCauses.add(createUserCause("fred"));
-        runtest(BuildCauses, condition, false);
+        buildCauses.clear();
+        buildCauses.add(createUserCause("eviloverlord"));
+        buildCauses.add(createUserCause("fred"));
+        runTest(buildCauses, condition, false);
 
         // started by several causes
-        BuildCauses.clear();
-        BuildCauses.add(createUserCause("eviloverlord"));
-        BuildCauses.add(createUserCause("fred"));
-        BuildCauses.add(new LegacyCodeCause());
-        BuildCauses.add(new RemoteCause("dummy_host", "dummynote") );
-        BuildCauses.add(new TimerTriggerCause());
-        runtest(BuildCauses, condition, false);
+        buildCauses.clear();
+        buildCauses.add(createUserCause("eviloverlord"));
+        buildCauses.add(createUserCause("fred"));
+        buildCauses.add(new LegacyCodeCause());
+        buildCauses.add(new RemoteCause("dummy_host", "dummynote") );
+        buildCauses.add(new TimerTriggerCause());
+        runTest(buildCauses, condition, false);
     }
 
-
-    @Bug(14438)
+    @Issue("JENKINS-14438")
     @Test
-    public void testMatrixUpstreamCause() throws Exception {
-
+    void testMatrixUpstreamCause() throws Exception {
         // setup some Causes
         FreeStyleProject upProject = jenkinsRule.createFreeStyleProject("firstProject");
         FreeStyleBuild upBuild = upProject.scheduleBuild2(0).get();
@@ -162,13 +159,11 @@ public class CauseConditionTest {
         condition = new CauseCondition("USER_CAUSE", false);
         runMatrixTest(upstreamCause, condition, false);
         runMatrixTest(userCause, condition, true);
-
-
     }
-    @Bug(14438)
-    @Test
-    public void testMatrixUserCause() throws Exception {
 
+    @Issue("JENKINS-14438")
+    @Test
+    void testMatrixUserCause() throws Exception {
         // setup some Causes
         FreeStyleProject upProject = jenkinsRule.createFreeStyleProject("secondProject");
         FreeStyleBuild upBuild = upProject.scheduleBuild2(0).get();
@@ -176,22 +171,21 @@ public class CauseConditionTest {
         Cause upstreamCause = new UpstreamCause(upBuild);
         Cause userCause = createUserCause("testUser");
 
-        //test User condition
+        // test User condition
         RunCondition condition = new CauseCondition("USER_CAUSE", false);
         runMatrixTest(upstreamCause, condition, false);
         runMatrixTest(userCause, condition, true);
     }
-
 
     private void runMatrixTest(Cause buildTrigger, RunCondition condition, Boolean builderRuns) throws Exception {
         MatrixProject matrixProject = createMatrixProject();
 
         // if the builder should run the result for each subbuild should be unstable
         // if the builder is not to run the result for each subbuild should be success.
-        Result testResult = builderRuns ? Result.UNSTABLE:Result.SUCCESS;
+        Result testResult = builderRuns ? Result.UNSTABLE : Result.SUCCESS;
 
         // create conditional build step requirements
-        List<BuildStep> builders = Collections.singletonList((Builder)new MockBuilder(Result.UNSTABLE));
+        List<BuildStep> builders = Collections.singletonList(new MockBuilder(Result.UNSTABLE));
 
         BuildStepRunner runner = new Run();
 
@@ -205,7 +199,6 @@ public class CauseConditionTest {
         for (MatrixRun run : runs) {
             jenkinsRule.assertBuildStatus(testResult, run);
         }
-
     }
 
     private MatrixProject createMatrixProject() throws IOException {
@@ -219,21 +212,21 @@ public class CauseConditionTest {
 
         return p;
     }
-    private void runtest(List<Cause> causes, RunCondition condition, boolean expected) throws Exception  {
 
+    private void runTest(List<Cause> causes, RunCondition condition, boolean expected) throws Exception  {
         FreeStyleProject project = jenkinsRule.createFreeStyleProject();
         FreeStyleBuild build;
 
-        if (causes.size() > 0) {
+        if (!causes.isEmpty()) {
             build = project.scheduleBuild2(5, causes.remove(0)).get();
         } else {
             build = project.scheduleBuild2(5).get();
         }
-        if (causes.size() > 0) {
+        if (!causes.isEmpty()) {
             // add other causes
             CauseAction act = build.getAction(CauseAction.class);
 
-            List<Cause> all = new LinkedList<Cause>(act.getCauses());
+            List<Cause> all = new LinkedList<>(act.getCauses());
             all.addAll(causes);
             CauseAction newAct = new CauseAction(all);
 
@@ -244,8 +237,7 @@ public class CauseConditionTest {
         List<Cause> buildCauses = build.getCauses();
         for (Cause cause2 : buildCauses) {
             System.out.println("DESC:" + cause2.getShortDescription());
-            if (Cause.UserCause.class.isInstance(cause2)) {
-                UserCause userCause = (UserCause)cause2;
+            if (cause2 instanceof UserCause userCause) {
                 System.out.println("UN:" + userCause.getUserName());
             }
         }
@@ -256,7 +248,7 @@ public class CauseConditionTest {
     }
 
     private UserCause createUserCause(String userid) {
-        User.get(userid).impersonate();
+        User.get(userid, true, Map.of()).impersonate2();
         return new UserCause();
     }
 }

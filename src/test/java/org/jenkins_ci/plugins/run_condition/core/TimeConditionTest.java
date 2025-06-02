@@ -28,46 +28,47 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
+import org.junit.jupiter.api.AfterEach;
+
 import org.jenkins_ci.plugins.run_condition.RunCondition;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Calendar;
 
 import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class TimeConditionTest {
+class TimeConditionTest {
 
-    private static int LOWER_HOURS = 9;
-    private static int LOWER_MINUTES = 0;
-    private static int UPPER_HOURS = 18;
-    private static int UPPER_MINUTES = 30;
+    private static final int LOWER_HOURS = 9;
+    private static final int LOWER_MINUTES = 0;
+    private static final int UPPER_HOURS = 18;
+    private static final int UPPER_MINUTES = 30;
     private final Calendar buildTime = Calendar.getInstance();
     private final Calendar currentTime = Calendar.getInstance();
     private final IMocksControl mockControl = EasyMock.createNiceControl();
     private final BuildListener listener = mockControl.createMock(BuildListener.class);
     private final PrintStream logger = new PrintStream(new ByteArrayOutputStream());
-    
-    @Before
-    public void setUp() throws Exception {
+
+    @BeforeEach
+    void setUp() {
         setDate(buildTime);
         setDate(currentTime);
         expect(listener.getLogger()).andReturn(logger).anyTimes();
         mockControl.replay();
     }
 
-    @After
-    public void tesrDown() throws Exception {
+    @AfterEach
+    void tearDown() {
         logger.close();
     }
 
     @Test
-    public void testFalseIfBeforeLowerTime() throws Exception {
+    void testFalseIfBeforeLowerTime() throws Exception {
         setTimeOutsideRange(buildTime);
         setTime(currentTime, LOWER_HOURS, LOWER_MINUTES);
         floor(currentTime);
@@ -76,7 +77,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testTrueIfSameAsLowerTime() throws Exception {
+    void testTrueIfSameAsLowerTime() throws Exception {
         setTimeOutsideRange(buildTime);
         setTime(currentTime, LOWER_HOURS, LOWER_MINUTES);
         floor(currentTime);
@@ -84,7 +85,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testTrueIfAfterLowerTime() throws Exception {
+    void testTrueIfAfterLowerTime() throws Exception {
         setTimeOutsideRange(buildTime);
         setTime(currentTime, LOWER_HOURS, LOWER_MINUTES);
         floor(currentTime);
@@ -93,7 +94,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testFalseIfAfterUpperTime() throws Exception {
+    void testFalseIfAfterUpperTime() throws Exception {
         setTimeOutsideRange(buildTime);
         setTime(currentTime, UPPER_HOURS, UPPER_MINUTES);
         ceiling(currentTime);
@@ -102,7 +103,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testTrueIfSameAsUpperTime() throws Exception {
+    void testTrueIfSameAsUpperTime() throws Exception {
         setTimeOutsideRange(buildTime);
         setTime(currentTime, UPPER_HOURS, UPPER_MINUTES);
         ceiling(currentTime);
@@ -110,7 +111,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testTrueIfBeforeUpperTime() throws Exception {
+    void testTrueIfBeforeUpperTime() throws Exception {
         setTimeOutsideRange(buildTime);
         setTime(currentTime, UPPER_HOURS, UPPER_MINUTES);
         ceiling(currentTime);
@@ -119,7 +120,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testFalseIfBuildTimeBeforeLowerTime() throws Exception {
+    void testFalseIfBuildTimeBeforeLowerTime() throws Exception {
         setTimeOutsideRange(currentTime);
         setTime(buildTime, LOWER_HOURS, LOWER_MINUTES);
         floor(buildTime);
@@ -128,7 +129,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testTrueIfBuildTimeSameAsLowerTime() throws Exception {
+    void testTrueIfBuildTimeSameAsLowerTime() throws Exception {
         setTimeOutsideRange(currentTime);
         setTime(buildTime, LOWER_HOURS, LOWER_MINUTES);
         floor(buildTime);
@@ -136,7 +137,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testTrueIfBuildTimeAfterLowerTime() throws Exception {
+    void testTrueIfBuildTimeAfterLowerTime() throws Exception {
         setTimeOutsideRange(currentTime);
         setTime(buildTime, LOWER_HOURS, LOWER_MINUTES);
         floor(buildTime);
@@ -145,7 +146,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testFalseIfBuildTimeAfterUpperTime() throws Exception {
+    void testFalseIfBuildTimeAfterUpperTime() throws Exception {
         setTimeOutsideRange(currentTime);
         setTime(buildTime, UPPER_HOURS, UPPER_MINUTES);
         ceiling(buildTime);
@@ -154,7 +155,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testTrueIfBuildTimeSameAsUpperTime() throws Exception {
+    void testTrueIfBuildTimeSameAsUpperTime() throws Exception {
         setTimeOutsideRange(currentTime);
         setTime(buildTime, UPPER_HOURS, UPPER_MINUTES);
         ceiling(buildTime);
@@ -162,7 +163,7 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testTrueIfBuildTimeBeforeUpperTime() throws Exception {
+    void testTrueIfBuildTimeBeforeUpperTime() throws Exception {
         setTimeOutsideRange(currentTime);
         setTime(buildTime, UPPER_HOURS, UPPER_MINUTES);
         ceiling(buildTime);
@@ -171,17 +172,17 @@ public class TimeConditionTest {
     }
 
     @Test
-    public void testTimeStringTest() throws Exception {
-        for(int hours = 0; hours < 24; hours++) {
-            for(int seconds = 0; seconds < 60; seconds++) {
+    void testTimeStringTest() {
+        for (int hours = 0; hours < 24; hours++) {
+            for (int seconds = 0; seconds < 60; seconds++) {
                 final String timeString = String.format("%d:%02d", hours, seconds);
-                assertTrue(timeString, TimeCondition.isTimeValid(timeString));
+                assertTrue(TimeCondition.isTimeValid(timeString), timeString);
             }
         }
-        for(int hours = 0; hours < 10; hours++) {
-            for(int seconds = 0; seconds < 60; seconds++) {
+        for (int hours = 0; hours < 10; hours++) {
+            for (int seconds = 0; seconds < 60; seconds++) {
                 final String timeString = String.format("%02d:%02d", hours, seconds);
-                assertTrue(timeString, TimeCondition.isTimeValid(timeString));
+                assertTrue(TimeCondition.isTimeValid(timeString), timeString);
             }
         }
     }
@@ -200,11 +201,11 @@ public class TimeConditionTest {
         assertEquals(expectedRunPerform, condition.runPerform(null, listener));
     }
 
-    private TimeCondition createCurrentTimeTimeCondition() throws Exception {
+    private TimeCondition createCurrentTimeTimeCondition() {
         return new TimeConditionForTest(LOWER_HOURS, LOWER_MINUTES, UPPER_HOURS, UPPER_MINUTES, false);
     }
 
-    private TimeCondition createBuildTimeTimeCondition() throws Exception {
+    private TimeCondition createBuildTimeTimeCondition() {
         return new TimeConditionForTest(LOWER_HOURS, LOWER_MINUTES, UPPER_HOURS, UPPER_MINUTES, true);
     }
 

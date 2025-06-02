@@ -1,57 +1,52 @@
 package org.jenkins_ci.plugins.run_condition.core;
 
 import hudson.EnvVars;
-import hudson.model.*;
 import hudson.slaves.EnvironmentVariablesNodeProperty;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+import org.jvnet.hudson.test.junit.jupiter.WithJenkins;
 
-import static hudson.model.Result.*;
-import static hudson.model.Result.NOT_BUILT;
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class VariableExistsConditionTest {
+@WithJenkins
+class VariableExistsConditionTest {
 
-    @Rule
-    public JenkinsRule jenkinsRule = new JenkinsRule();
+    private JenkinsRule jenkinsRule;
 
-    @Test
-
-    public void checkingEnvironmentVariables() throws IOException, InterruptedException {
-
-         EnvironmentVariablesNodeProperty prop = new EnvironmentVariablesNodeProperty();
-         EnvVars env = prop.getEnvVars();
-         env.put("value", "1");
-         jenkinsRule.jenkins.getGlobalNodeProperties().add(prop);
-         EnvironmentVariablesNodeProperty values= (EnvironmentVariablesNodeProperty) jenkinsRule.jenkins.getGlobalNodeProperties().get(0);
-         assertEquals(false,values.getEnv().get(0).key.equals("Value"));
-         assertEquals(true,values.getEnv().get(0).key.equals("value"));
-      }
-
-      @Test
-    public void VariableExistsConditionSuccess(){
-
-        VariableExistsCondition variable1 = new VariableExistsCondition("Hello");
-        VariableExistsCondition variable2 = new VariableExistsCondition(null);
-        assertEquals(variable1.getVariableName(),"Hello");
-        assertEquals(variable2.getVariableName(),null);
+    @BeforeEach
+    void setUp(JenkinsRule rule) {
+        jenkinsRule = rule;
     }
-    @Test
-    public void VariableExistsConditionComparingResult(){
 
+    @Test
+    void checkingEnvironmentVariables() {
+        EnvironmentVariablesNodeProperty prop = new EnvironmentVariablesNodeProperty();
+        EnvVars env = prop.getEnvVars();
+        env.put("value", "1");
+        jenkinsRule.jenkins.getGlobalNodeProperties().add(prop);
+        EnvironmentVariablesNodeProperty values= (EnvironmentVariablesNodeProperty) jenkinsRule.jenkins.getGlobalNodeProperties().get(0);
+        assertNotEquals("Value", values.getEnv().get(0).key);
+        assertEquals("value", values.getEnv().get(0).key);
+    }
+
+    @Test
+    void variableExistsConditionSuccess(){
         VariableExistsCondition variable1 = new VariableExistsCondition("Hello");
         VariableExistsCondition variable2 = new VariableExistsCondition(null);
-        assertNotEquals(variable1.getVariableName(),"hello");
-        assertNotEquals(variable2.getVariableName(),"Hello");
+        assertEquals("Hello", variable1.getVariableName());
+        assertNull(variable2.getVariableName());
+    }
 
+    @Test
+    void variableExistsConditionComparingResult(){
+        VariableExistsCondition variable1 = new VariableExistsCondition("Hello");
+        VariableExistsCondition variable2 = new VariableExistsCondition(null);
+        assertNotEquals("hello", variable1.getVariableName());
+        assertNotEquals("Hello", variable2.getVariableName());
     }
 
 }
