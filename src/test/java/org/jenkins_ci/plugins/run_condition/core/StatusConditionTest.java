@@ -27,9 +27,9 @@ package org.jenkins_ci.plugins.run_condition.core;
 import hudson.model.BuildListener;
 import hudson.model.FreeStyleBuild;
 import hudson.model.Result;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -44,75 +44,74 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 import static org.easymock.EasyMock.verify;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class StatusConditionTest {
+class StatusConditionTest {
 
     private final BuildListener buildListener = createMock(BuildListener.class);
     private final PrintStream logger = new PrintStream(new ByteArrayOutputStream());
     private final FreeStyleBuild freeStyleBuild = createMock(FreeStyleBuild.class);
 
-    private static Result[] BuildResults = { SUCCESS, UNSTABLE, FAILURE, NOT_BUILT, ABORTED };
+    private static final Result[] BUILD_RESULTS = { SUCCESS, UNSTABLE, FAILURE, NOT_BUILT, ABORTED };
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeEach
+    void setUp() {
         expect(buildListener.getLogger()).andReturn(logger).anyTimes();
         replay(buildListener);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() {
         logger.close();
     }
 
     @Test
-    public void testStringConstructorSuccess() throws Exception {
+    void testStringConstructorSuccess() {
         StatusCondition condition = new StatusCondition("SUCCESS", "SUCCESS");
         assertEquals(Result.SUCCESS, condition.getBestResult());
         assertEquals(Result.SUCCESS, condition.getWorstResult());
     }
 
     @Test
-    public void testStringConstructorUnstable() throws Exception {
+    void testStringConstructorUnstable() {
         StatusCondition condition = new StatusCondition("UNSTABLE", "UNSTABLE");
         assertEquals(Result.UNSTABLE, condition.getBestResult());
         assertEquals(Result.UNSTABLE, condition.getWorstResult());
     }
 
     @Test
-    public void testStringConstructorFailure() throws Exception {
+    void testStringConstructorFailure() {
         StatusCondition condition = new StatusCondition("FAILURE", "FAILURE");
         assertEquals(Result.FAILURE, condition.getBestResult());
         assertEquals(Result.FAILURE, condition.getWorstResult());
     }
 
     @Test
-    public void testStringConstructorNotBuilt() throws Exception {
+    void testStringConstructorNotBuilt() {
         StatusCondition condition = new StatusCondition("NOT_BUILT", "NOT_BUILT");
         assertEquals(Result.NOT_BUILT, condition.getBestResult());
         assertEquals(Result.NOT_BUILT, condition.getWorstResult());
     }
 
     @Test
-    public void testStringConstructorAborted() throws Exception {
+    void testStringConstructorAborted() {
         StatusCondition condition = new StatusCondition("ABORTED", "ABORTED");
         assertEquals(Result.ABORTED, condition.getBestResult());
         assertEquals(Result.ABORTED, condition.getWorstResult());
     }
 
-    @Test(expected = RuntimeException.class)
-    public void testStringConstructorInvalidWorst() throws Exception {
-        new StatusCondition("INVALID_BUILD_STATUS", "ABORTED");
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testStringConstructorInvalidBest() throws Exception {
-        new StatusCondition("ABORTED", "INVALID_BUILD_STATUS");
+    @Test
+    void testStringConstructorInvalidWorst() {
+        assertThrows(RuntimeException.class, () -> new StatusCondition("INVALID_BUILD_STATUS", "ABORTED"));
     }
 
     @Test
-    public void testSuccessSuccess() throws Exception {
+    void testStringConstructorInvalidBest() {
+        assertThrows(RuntimeException.class, () -> new StatusCondition("ABORTED", "INVALID_BUILD_STATUS"));
+    }
+
+    @Test
+    void testSuccessSuccess() throws Exception {
         final StatusCondition condition = new StatusCondition(SUCCESS, SUCCESS);
         assertRunResult(condition, SUCCESS, true);
         assertRunResult(condition, UNSTABLE, false);
@@ -122,7 +121,7 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testUnstableSuccess() throws Exception {
+    void testUnstableSuccess() throws Exception {
         final StatusCondition condition = new StatusCondition(UNSTABLE, SUCCESS);
         assertRunResult(condition, SUCCESS, true);
         assertRunResult(condition, UNSTABLE, true);
@@ -132,7 +131,7 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testFailureSuccess() throws Exception {
+    void testFailureSuccess() throws Exception {
         final StatusCondition condition = new StatusCondition(FAILURE, SUCCESS);
         assertRunResult(condition, SUCCESS, true);
         assertRunResult(condition, UNSTABLE, true);
@@ -142,7 +141,7 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testNotBuiltSuccess() throws Exception {
+    void testNotBuiltSuccess() throws Exception {
         final StatusCondition condition = new StatusCondition(NOT_BUILT, SUCCESS);
         assertRunResult(condition, SUCCESS, true);
         assertRunResult(condition, UNSTABLE, true);
@@ -152,7 +151,7 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testAbortedSuccess() throws Exception {
+    void testAbortedSuccess() throws Exception {
         final StatusCondition condition = new StatusCondition(ABORTED, SUCCESS);
         assertRunResult(condition, SUCCESS, true);
         assertRunResult(condition, UNSTABLE, true);
@@ -162,12 +161,12 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testSuccessUnstableNeverTrue() throws Exception {
+    void testSuccessUnstableNeverTrue() throws Exception {
         assertRunPerformAlwaysFalse(new StatusCondition(SUCCESS, UNSTABLE));
     }
 
     @Test
-    public void testUnstableUnstable() throws Exception {
+    void testUnstableUnstable() throws Exception {
         final StatusCondition condition = new StatusCondition(UNSTABLE, UNSTABLE);
         assertRunResult(condition, SUCCESS, false);
         assertRunResult(condition, UNSTABLE, true);
@@ -177,7 +176,7 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testFailureUnstable() throws Exception {
+    void testFailureUnstable() throws Exception {
         final StatusCondition condition = new StatusCondition(FAILURE, UNSTABLE);
         assertRunResult(condition, SUCCESS, false);
         assertRunResult(condition, UNSTABLE, true);
@@ -187,7 +186,7 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testNotbuiltUnstable() throws Exception {
+    void testNotBuiltUnstable() throws Exception {
         final StatusCondition condition = new StatusCondition(NOT_BUILT, UNSTABLE);
         assertRunResult(condition, SUCCESS, false);
         assertRunResult(condition, UNSTABLE, true);
@@ -197,7 +196,7 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testAbortedUnstable() throws Exception {
+    void testAbortedUnstable() throws Exception {
         final StatusCondition condition = new StatusCondition(ABORTED, UNSTABLE);
         assertRunResult(condition, SUCCESS, false);
         assertRunResult(condition, UNSTABLE, true);
@@ -207,17 +206,17 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testSuccessFailure() throws Exception {
+    void testSuccessFailure() throws Exception {
         assertRunPerformAlwaysFalse(new StatusCondition(SUCCESS, FAILURE));
     }
 
     @Test
-    public void testUnstableFailure() throws Exception {
+    void testUnstableFailure() throws Exception {
         assertRunPerformAlwaysFalse(new StatusCondition(UNSTABLE, FAILURE));
     }
 
     @Test
-    public void testFailureFailure() throws Exception {
+    void testFailureFailure() throws Exception {
         final StatusCondition condition = new StatusCondition(FAILURE, FAILURE);
         assertRunResult(condition, SUCCESS, false);
         assertRunResult(condition, UNSTABLE, false);
@@ -227,7 +226,7 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testNotbuiltFailure() throws Exception {
+    void testNotbuiltFailure() throws Exception {
         final StatusCondition condition = new StatusCondition(NOT_BUILT, FAILURE);
         assertRunResult(condition, SUCCESS, false);
         assertRunResult(condition, UNSTABLE, false);
@@ -237,7 +236,7 @@ public class StatusConditionTest {
     }
 
     @Test
-    public void testAbortedFailure() throws Exception {
+    void testAbortedFailure() throws Exception {
         final StatusCondition condition = new StatusCondition(ABORTED, FAILURE);
         assertRunResult(condition, SUCCESS, false);
         assertRunResult(condition, UNSTABLE, false);
@@ -247,7 +246,7 @@ public class StatusConditionTest {
     }
 
     private void assertRunPerformAlwaysFalse(final StatusCondition condition) throws Exception {
-        for (Result result : BuildResults)
+        for (Result result : BUILD_RESULTS)
             assertRunResult(condition, result, false);
     }
 

@@ -28,10 +28,11 @@ import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
+import org.junit.jupiter.api.AfterEach;
+
 import org.jenkins_ci.plugins.run_condition.RunCondition;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -39,29 +40,29 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import static org.easymock.EasyMock.expect;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DayConditionTest {
+class DayConditionTest {
 
     private final Calendar buildTime = Calendar.getInstance();
     private final Calendar currentTime = Calendar.getInstance();
     private final IMocksControl mockControl = EasyMock.createNiceControl();
     private final BuildListener buildListener = mockControl.createMock(BuildListener.class);
     private final PrintStream printStream = new PrintStream(new ByteArrayOutputStream());
-    
-    @Before
-    public void setUp() throws Exception {
+
+    @BeforeEach
+    void setUp() {
         expect(buildListener.getLogger()).andReturn(printStream).anyTimes();
         mockControl.replay();
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterEach
+    void tearDown() {
         printStream.close();
     }
 
     @Test
-    public void testWeekend() throws Exception {
+    void testWeekend() throws Exception {
         currentTime.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
         assertWeekend(true, true);
         currentTime.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -79,7 +80,7 @@ public class DayConditionTest {
     }
 
     @Test
-    public void testWeekday() throws Exception {
+    void testWeekday() throws Exception {
         currentTime.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
         assertWeekday(true, false);
         currentTime.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -97,7 +98,7 @@ public class DayConditionTest {
     }
 
     @Test
-    public void testSelectDaysNoneSelected() throws Exception {
+    void testSelectDaysNoneSelected() throws Exception {
         final DayCondition.SelectDays select = new DayCondition.SelectDays(DayCondition.SelectDays.SelectDaysDescriptor.getAllDays());
         final DayCondition condition = new DayCondition(false, select);
         currentTime.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
@@ -117,8 +118,8 @@ public class DayConditionTest {
     }
 
     @Test
-    public void testSelectDaysAllSelected() throws Exception {
-        final ArrayList<DayCondition.Day> days = new ArrayList<DayCondition.Day>();
+    void testSelectDaysAllSelected() throws Exception {
+        final ArrayList<DayCondition.Day> days = new ArrayList<>();
         for (int i = 0; i < 8; i++)
             days.add(new DayCondition.Day(i, true));
         final DayCondition condition = new DayCondition(false, new DayCondition.SelectDays(days));
@@ -139,8 +140,8 @@ public class DayConditionTest {
     }
 
     @Test
-    public void testSelectDaysSomeSelected() throws Exception {
-        final ArrayList<DayCondition.Day> days = new ArrayList<DayCondition.Day>();
+    void testSelectDaysSomeSelected() throws Exception {
+        final ArrayList<DayCondition.Day> days = new ArrayList<>();
         days.add(new DayCondition.Day(Calendar.MONDAY, true));
         days.add(new DayCondition.Day(Calendar.TUESDAY, false));
         days.add(new DayCondition.Day(Calendar.WEDNESDAY, true));
