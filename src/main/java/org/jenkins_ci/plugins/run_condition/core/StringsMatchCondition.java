@@ -31,18 +31,32 @@ import org.jenkins_ci.plugins.run_condition.Messages;
 import org.jenkins_ci.plugins.run_condition.common.AlwaysPrebuildRunCondition;
 import org.jenkinsci.plugins.tokenmacro.TokenMacro;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+
+import java.util.Map;
+import java.util.logging.Logger;
 
 public class StringsMatchCondition extends AlwaysPrebuildRunCondition {
 
     final String arg1;
     final String arg2;
     final boolean ignoreCase;
+    boolean environmentVariables;
 
     @DataBoundConstructor
     public StringsMatchCondition(final String arg1, final String arg2, final boolean ignoreCase) {
         this.arg1 = arg1;
         this.arg2 = arg2;
         this.ignoreCase = ignoreCase;
+    }
+
+    @DataBoundSetter
+    public void setEnvironmentVariables(Boolean environmentVariables){
+        this.environmentVariables=environmentVariables;
+    }
+
+    public boolean isEnvironmentVariables() {
+        return environmentVariables;
     }
 
     public String getArg2() {
@@ -59,11 +73,19 @@ public class StringsMatchCondition extends AlwaysPrebuildRunCondition {
 
     @Override
     public boolean runPerform(final AbstractBuild<?, ?> build, final BuildListener listener) throws Exception {
-        final String expanded1 = TokenMacro.expandAll(build, listener, arg1);
-        final String expanded2 = TokenMacro.expandAll(build, listener, arg2);
-        listener.getLogger().println(Messages.stringsMatchCondition_console_args(expanded1, expanded2));
-        if (expanded1 == null) return false;
-        return ignoreCase ? expanded1.equalsIgnoreCase(expanded2) : expanded1.equals(expanded2);
+        if (environmentVariables == true) {
+            final String expanded1 = TokenMacro.expandAll(build, listener, "$"+"{"+arg1+"}");
+            final String expanded2 = TokenMacro.expandAll(build, listener, "$"+"{"+arg2+"}");
+            listener.getLogger().println(Messages.stringsMatchCondition_console_args(expanded1, expanded2));
+            if (expanded1 == null) return false;
+            return ignoreCase ? expanded1.equalsIgnoreCase(expanded2) : expanded1.equals(expanded2);
+        } else {
+            final String expanded1 = TokenMacro.expandAll(build, listener, arg1);
+            final String expanded2 = TokenMacro.expandAll(build, listener, arg2);
+            listener.getLogger().println(Messages.stringsMatchCondition_console_args(expanded1, expanded2));
+            if (expanded1 == null) return false;
+            return ignoreCase ? expanded1.equalsIgnoreCase(expanded2) : expanded1.equals(expanded2);
+        }
     }
 
     @Extension
