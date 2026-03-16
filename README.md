@@ -125,4 +125,4 @@ And [this](https://github.com/bap2000/jenkins-run-condition-example-plugin/blob/
 
 ## Changelog
 For recent versions, see [GitHub Releases](https://github.com/jenkinsci/run-condition-plugin/releases)  
-For versions 1.0 and older, see the [CHANGELOG.md](CHANGELOG.md)
+For versions 1.0 and older, see the [old CHANGELOG](https://github.com/jenkinsci/run-condition-plugin/blob/276.v97298f3a_cd51/CHANGELOG-old.md)
