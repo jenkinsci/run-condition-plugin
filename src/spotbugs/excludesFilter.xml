@@ -24,4 +24,9 @@
     <Class name="org.jenkins_ci.plugins.run_condition.core.NodeCondition$NodeNameComparator"/>
   </Match>
 
+  <Match>
+    <Bug pattern="IAOM_DO_NOT_INCREASE_METHOD_ACCESSIBILITY"/>
+    <Class name="~org[.]jenkins_ci[.]plugins[.]run_condition[.]core[.]CauseCondition.*"/>
+  </Match>
+
 </FindBugsFilter>

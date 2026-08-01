@@ -40,6 +40,6 @@ public abstract class PrebuildSameAsPerformRunCondition extends RunCondition {
         return runBuildStep(build, listener);
     }
 
-    protected abstract boolean runBuildStep(AbstractBuild<?, ?> build, BuildListener listener) throws Exception;
+    public abstract boolean runBuildStep(AbstractBuild<?, ?> build, BuildListener listener) throws Exception;
 
 }
