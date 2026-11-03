@@ -29,6 +29,7 @@ import hudson.Extension;
 import hudson.Launcher;
 import hudson.model.AbstractBuild;
 import hudson.model.BuildListener;
+import hudson.model.BuildStepListener;
 import hudson.model.Describable;
 import hudson.model.Descriptor;
 import hudson.model.Hudson;
@@ -109,7 +110,21 @@ public abstract class BuildStepRunner implements Describable<BuildStepRunner> {
                 return condition.runPerform(build, listener);
             }
             public boolean run() throws IOException, InterruptedException {
-                return buildStep.perform(build, launcher, listener);
+                boolean stepResult = false;
+
+                for (BuildStepListener stepListener : BuildStepListener.all()) {
+                    stepListener.started(build, buildStep, listener);
+                }
+
+                try {
+                    stepResult = buildStep.perform(build, launcher, listener);
+                }
+                finally {
+                    for (BuildStepListener buildStepListener : BuildStepListener.all()) {
+                        buildStepListener.finished(build, buildStep, listener, stepResult);
+                    }
+                }
+                return stepResult;
             }
             public void logRunning(final boolean running) {
                 if (running) {
