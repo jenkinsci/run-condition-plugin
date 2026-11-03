@@ -25,6 +25,9 @@
 
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
 
+    <f:entry title="${%environmentVariables}" field="environmentVariables">
+        <f:checkbox/>
+    </f:entry>
     <f:entry title="${%arg1}" field="arg1">
         <f:textbox/>
     </f:entry>
@@ -34,5 +37,5 @@
     <f:entry title="${%ignoreCase}" field="ignoreCase">
         <f:checkbox/>
     </f:entry>
-    
+
 </j:jelly>
